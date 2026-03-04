@@ -1,0 +1,64 @@
+# .gitignore — Autonomous AI Agent Team Workspace
+
+# ─── Secrets & credentials ─────────────────────────────────────────────────
+.env
+*.env
+.env.*
+!.env.example
+
+# OpenClaw identity & config
+.openclaw/
+openclaw.json
+
+# ─── Agent runtime state (personal, never shared) ──────────────────────────
+# Daily memory logs are personal runtime state — exclude from commits
+agents/*/memory/*.md
+agents/*/memory/
+
+# Intel runtime outputs
+intel/DAILY-INTEL.md
+intel/data/*.json
+intel/data/*.jsonl
+intel/data/*.tmp
+!intel/data/README.md
+
+# ─── OS files ──────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+
+# ─── Temp/build files ──────────────────────────────────────────────────────
+*.log
+*.tmp
+node_modules/
+npm-debug.log*
+/add-cron-jobs.sh
+!scripts/add-cron-jobs.sh
+
+# ─── Editor ────────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ─── OpenClaw generated helper docs/state ───────────────────────────────────
+IDENTITY.md
+TOOLS.md
+USER.md
+agents/*/IDENTITY.md
+agents/*/TOOLS.md
+agents/*/USER.md
+agents/*/HEARTBEAT.md
+agents/*/intel
+agents/*/intel/
+agents/*/intel.backup-*/
+memory/[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9].md
+
+# ─── Private project workspaces (keep local) ─────────────────────────────
+projects/gitlab-ai-hackathon-2026/
+
+# Local quarantine during cleanup
+_trash/
+
+# Optional local private helpers
+scripts/hackathon-kickoff.sh
+scripts/hackathon-status.sh
