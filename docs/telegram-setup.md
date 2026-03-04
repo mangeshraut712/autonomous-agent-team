@@ -1,201 +1,78 @@
-# Telegram Setup & Testing Guide
+# Telegram Settings and Setup
 
-This guide walks you through connecting your autonomous agent team to Telegram
-and testing that everything works end-to-end.
+Use this guide to configure Telegram correctly for OpenClaw in a public-safe way.
 
----
+## Required Settings
 
-## Your Current Setup
+Set these values in `.env`:
 
-From your `openclaw.json`:
-- **Bot token**: already configured ✅
-- **DM policy**: `pairing` (secure — only paired users can message the bot)
-- **Group policy**: `open`
-- **Streaming**: `partial` (shows typing indicators)
+```env
+TELEGRAM_BOT_TOKEN=<token from @BotFather>
+TELEGRAM_CHAT_TARGET=<your numeric Telegram user/chat id>
+```
 
-Your Telegram bot is: the one you created during `openclaw onboard`.
+## Recommended Telegram Policy
 
----
+Set strict DM/group policies and allowlists:
 
-## Step 1 — Find your bot on Telegram
+```bash
+openclaw config set channels.telegram.dmPolicy allowlist
+openclaw config set channels.telegram.allowFrom '["<YOUR_TELEGRAM_USER_ID>"]'
+openclaw config set channels.telegram.groupPolicy allowlist
+openclaw config set channels.telegram.groupAllowFrom '["<YOUR_TELEGRAM_USER_ID>"]'
+openclaw gateway restart
+```
 
-1. Open Telegram on your phone or desktop
-2. In the search bar, search for your bot by name (whatever you named it during BotFather setup)
-3. Tap **Start** or send `/start`
+If you prefer pairing flow (safer for first setup):
 
-The bot will respond with a pairing request because `dmPolicy: pairing` requires you to authenticate first.
+```bash
+openclaw config set channels.telegram.dmPolicy pairing
+openclaw gateway restart
+```
 
----
+Then approve each pairing request:
 
-## Step 2 — Pair your account
-
-Because `dmPolicy` is set to `pairing`, your Telegram account needs to be
-explicitly paired to the gateway.
-
-After you message the bot, Telegram returns a pairing code like `ABCD1234`.
-
-Approve that code in terminal:
 ```bash
 openclaw pairing approve telegram <PAIRING_CODE>
 ```
 
-Check pending requests:
-```bash
-openclaw pairing list
-```
+## How to Get Your Telegram User ID
 
-After pairing, your Telegram ID gets added to the allowlist and future
-messages go through directly.
+1. Message your bot with `/start` while `dmPolicy=pairing`, then read the user id from the pairing message.
+2. Or use a Telegram utility bot like `@userinfobot`.
 
----
-
-## Step 3 — Send your first message
-
-Once paired, message your bot:
-
-```
-hey monica, what's your role?
-```
-
-Monica should respond within a few seconds explaining her Chief of Staff role.
-
-**Other good first messages:**
-```
-monica, who's on the team?
-```
-```
-monica, do a heartbeat check
-```
-```
-monica, ask dwight to research what's trending in AI today
-```
-
----
-
-## Step 4 — Test each agent
-
-### Test Monica (coordination)
-```
-monica, summarize your squad
-```
-
-### Test Dwight (research) — manual trigger
-```bash
-openclaw cron run 64334029-8651-445c-98e8-dd7c45042a28
-```
-
-### Test Kelly (tweet drafts) — after Dwight has run
-```bash
-openclaw cron run b30ef0eb-fbcd-41a3-b7b5-22855ea33fe5
-```
-
-### Test Ross (engineering)
-```
-monica, ask ross to review [paste a code snippet or GitHub PR link]
-```
-
----
-
-## Step 5 — Run the full test suite
+## Basic Validation
 
 ```bash
-chmod +x scripts/test.sh
-./scripts/test.sh
+# Check bot token
+curl "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/getMe"
+
+# Send test message
+openclaw message send --channel telegram --target <YOUR_CHAT_ID> --message "OpenClaw Telegram test"
+
+# Probe channel health
+openclaw channels status --probe
 ```
-
-This checks:
-1. All workspace files exist
-2. No secrets are tracked by git  
-3. Gateway is reachable
-4. Cron jobs are registered
-5. Telegram bot token is valid (live API call)
-
----
-
-## Telegram Commands (built-in OpenClaw)
-
-Once connected, you can use these in Telegram:
-
-| Command | What it does |
-|---------|-------------|
-| `/start` | Begin session |
-| `/new` | Start a fresh session (clears context) |
-| `/help` | Show available commands |
-| `hey monica` | Wake up Monica |
-| `@botname message` | Direct mention (useful in groups) |
-
----
-
-## Managing Notifications
-
-The agents send you things proactively based on their cron schedules.
-By default they message you when their job completes.
-
-**To see all pending messages**: Open Telegram — they queue up while you sleep.
-
-**To pause a job temporarily:**
-```bash
-openclaw cron disable <jobId>
-```
-
-**To resume:**
-```bash
-openclaw cron enable <jobId>
-```
-
----
 
 ## Troubleshooting
 
-### Bot doesn't respond
-1. Check gateway is running: `curl http://127.0.0.1:18789/` — should return something
-2. Check Telegram token: `curl https://api.telegram.org/bot<YOUR_TOKEN>/getMe`
-3. Check pairing status: `openclaw pairing list` (approve new code with `openclaw pairing approve telegram <CODE>`)
-4. Restart gateway: `openclaw gateway restart`
+### Bot not responding
 
-### "Device signature invalid" error
-This happens when the gateway lock file gets corrupted (e.g. after force-killing the process).
 ```bash
-# Re-onboard (your settings are saved, just say yes to keep existing config)
-openclaw onboard
+openclaw health
+openclaw gateway status
+openclaw logs --limit 200
 ```
 
-### Agent responds but output is wrong
-Give feedback directly in Telegram: *"kelly, no emojis and no hashtags, remember that"*
-The agent will update its MEMORY.md. Quality improves after a few correction cycles.
+### Pairing keeps failing
 
-### Cron job didn't run at schedule time
-Monica's heartbeat catches this. Or run manually:
 ```bash
-openclaw cron run <jobId>
+openclaw pairing list
+openclaw pairing approve telegram <PAIRING_CODE>
 ```
 
----
-
-## Checking Logs
+### Gateway/channel stale state
 
 ```bash
-# Recent gateway logs
-openclaw logs
-
-# Cron run history for a specific job
-openclaw cron runs <jobId>
-
-# Dashboard (web UI)
-open http://127.0.0.1:18789
-```
-
----
-
-## Your Cron Job IDs (for manual testing)
-
-| Agent | Job | ID |
-|-------|-----|----|
-| Dwight | Morning Research (8:01 AM) | `64334029-8651-445c-98e8-dd7c45042a28` |
-| Kelly | Viral Check (9:01 AM, 1:01 PM) | `b30ef0eb-fbcd-41a3-b7b5-22855ea33fe5` |
-| Ross | Engineering (10:01 AM) | `8cee5580-04c2-4a93-b620-4bc332b0b279` |
-
-Run any job now with:
-```bash
-openclaw cron run <ID>
+openclaw gateway restart
 ```

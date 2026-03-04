@@ -4,7 +4,7 @@
 
 | File | Purpose |
 |---|---|
-| `telegram-setup.md` | BotFather setup, pairing, chat-id testing, troubleshooting |
+| `telegram-setup.md` | Telegram settings, pairing policy, allowlist config, testing, troubleshooting |
 
 ## Operational Commands
 

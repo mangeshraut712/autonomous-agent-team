@@ -91,18 +91,38 @@ chmod +x scripts/add-cron-jobs.sh
 ./scripts/status.sh
 ```
 
-## Telegram Workflow
+## Telegram Settings
 
-- Approve pairing requests from your own account:
+Recommended secure policy:
 
 ```bash
+openclaw config set channels.telegram.dmPolicy allowlist
+openclaw config set channels.telegram.allowFrom '["<YOUR_TELEGRAM_USER_ID>"]'
+openclaw config set channels.telegram.groupPolicy allowlist
+openclaw config set channels.telegram.groupAllowFrom '["<YOUR_TELEGRAM_USER_ID>"]'
+openclaw gateway restart
+```
+
+Pairing alternative:
+
+```bash
+openclaw config set channels.telegram.dmPolicy pairing
+openclaw gateway restart
 openclaw pairing approve telegram <PAIRING_CODE>
 ```
+
+## Telegram Workflow
 
 - Send direct test message:
 
 ```bash
 openclaw message send --channel telegram --target <YOUR_CHAT_ID> --message "OpenClaw test"
+```
+
+- Probe Telegram channel health:
+
+```bash
+openclaw channels status --probe
 ```
 
 ## Web Search Fallback (Parallel)
@@ -145,7 +165,7 @@ openclaw security audit --deep
 
 ## Documentation
 
-See `docs/README.md` for setup and command references.
+See `docs/README.md` and `docs/telegram-setup.md` for setup and command references.
 
 ## License
 
