@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # scripts/add-cron-jobs.sh
-# Register default cron jobs for the six-agent workspace.
+# Register default cron jobs for the six-agent workspace + heartbeat guardrail.
 
 set -euo pipefail
 
@@ -57,6 +57,14 @@ if [[ -z "$OPENCLAW_CRON_MODEL" ]]; then
   OPENCLAW_CRON_MODEL="$(read_env_value OPENCLAW_CRON_MODEL "$ROOT/.env" || true)"
 fi
 
+OPENCLAW_HEARTBEAT_CRON="${OPENCLAW_HEARTBEAT_CRON:-}"
+if [[ -z "$OPENCLAW_HEARTBEAT_CRON" ]]; then
+  OPENCLAW_HEARTBEAT_CRON="$(read_env_value OPENCLAW_HEARTBEAT_CRON "$ROOT/.env" || true)"
+fi
+if [[ -z "$OPENCLAW_HEARTBEAT_CRON" ]]; then
+  OPENCLAW_HEARTBEAT_CRON="*/30 8-23 * * *"
+fi
+
 if ! "${OC_CMD[@]}" health >/dev/null 2>&1; then
   echo "Error: OpenClaw gateway is not healthy."
   echo "Run: openclaw doctor --non-interactive && openclaw gateway restart"
@@ -93,6 +101,14 @@ add_job() {
     return 0
   fi
 
+  local extra_args=()
+  if (( ${#MODEL_ARGS[@]} > 0 )); then
+    extra_args+=("${MODEL_ARGS[@]}")
+  fi
+  if (( ${#DELIVERY_ARGS[@]} > 0 )); then
+    extra_args+=("${DELIVERY_ARGS[@]}")
+  fi
+
   "${OC_CMD[@]}" cron add \
     --name "$name" \
     --cron "$cron_expr" \
@@ -101,8 +117,7 @@ add_job() {
     --session isolated \
     --message "$message" \
     --timeout-seconds 420 \
-    "${MODEL_ARGS[@]}" \
-    "${DELIVERY_ARGS[@]}" \
+    "${extra_args[@]}" \
     --json | jq -r '.id'
 }
 
@@ -110,7 +125,7 @@ echo
 echo "🦞 Registering default cron schedule..."
 echo
 
-echo "[1/6] Dwight — Morning Research (8:01 AM)"
+echo "[1/7] Dwight — Morning Research (8:01 AM)"
 DWIGHT_AM="$(add_job \
   "Dwight Morning" \
   "1 8 * * *" \
@@ -119,7 +134,7 @@ DWIGHT_AM="$(add_job \
   "Run morning research sweep. Use web_search with configured provider (Brave/Gemini/Kimi/Perplexity/Grok). If web_search is unavailable, use scripts/parallel-search.sh fallback. Write to intel/data/YYYY-MM-DD.json and intel/DAILY-INTEL.md with citations.")"
 echo "  ✓ ID: $DWIGHT_AM"
 
-echo "[2/6] Kelly — Viral Content Checks (9:01 AM, 1:01 PM)"
+echo "[2/7] Kelly — Viral Content Checks (9:01 AM, 1:01 PM)"
 KELLY_AMPM="$(add_job \
   "Kelly Viral" \
   "1 9,13 * * *" \
@@ -128,7 +143,7 @@ KELLY_AMPM="$(add_job \
   "Read intel/DAILY-INTEL.md and draft 3-5 X posts in voice guidelines. Save drafts to memory/YYYY-MM-DD.md.")"
 echo "  ✓ ID: $KELLY_AMPM"
 
-echo "[3/6] Ross — Engineering Tasks (10:01 AM)"
+echo "[3/7] Ross — Engineering Tasks (10:01 AM)"
 ROSS_AM="$(add_job \
   "Ross Engineering" \
   "1 10 * * *" \
@@ -137,7 +152,7 @@ ROSS_AM="$(add_job \
   "Review queued engineering tasks, validate assumptions, and log concrete next actions in memory/YYYY-MM-DD.md.")"
 echo "  ✓ ID: $ROSS_AM"
 
-echo "[4/6] Dwight — Afternoon Research (4:01 PM)"
+echo "[4/7] Dwight — Afternoon Research (4:01 PM)"
 DWIGHT_PM="$(add_job \
   "Dwight Afternoon" \
   "1 16 * * *" \
@@ -146,7 +161,7 @@ DWIGHT_PM="$(add_job \
   "Run afternoon research sweep and update intel files with new items or explicit no-change status with reasons.")"
 echo "  ✓ ID: $DWIGHT_PM"
 
-echo "[5/6] Kelly — Evening X Drafts (5:01 PM)"
+echo "[5/7] Kelly — Evening X Drafts (5:01 PM)"
 KELLY_PM="$(add_job \
   "Kelly X Drafts" \
   "1 17 * * *" \
@@ -155,7 +170,7 @@ KELLY_PM="$(add_job \
   "Draft 3-5 evening X options from today's intel. Include one contrarian angle and one practical angle.")"
 echo "  ✓ ID: $KELLY_PM"
 
-echo "[6/6] Rachel — LinkedIn Drafts (5:01 PM)"
+echo "[6/7] Rachel — LinkedIn Drafts (5:01 PM)"
 RACHEL_PM="$(add_job \
   "Rachel LinkedIn" \
   "1 17 * * *" \
@@ -164,15 +179,25 @@ RACHEL_PM="$(add_job \
   "Draft 2 LinkedIn posts from today's intel with clear takeaways and professional tone.")"
 echo "  ✓ ID: $RACHEL_PM"
 
+echo "[7/7] Monica — Heartbeat Ops (every 30m, 8:00-23:00 IST)"
+MONICA_HEARTBEAT="$(add_job \
+  "Monica Heartbeat" \
+  "$OPENCLAW_HEARTBEAT_CRON" \
+  "main" \
+  "agent:main:heartbeat" \
+  "Read HEARTBEAT.md and execute in strict order. Outside 08:00-23:00 IST, return HEARTBEAT_QUIET. Before any compaction/reset, flush key learnings to memory/YYYY-MM-DD.md and durable facts to MEMORY.md. For stale/failed cron jobs, trigger a single forced run and send alert. If cron count is >=50, run scripts/drift-audit.sh and alert on risk.")"
+echo "  ✓ ID: $MONICA_HEARTBEAT"
+
 echo
 echo "✅ Cron schedule is ready."
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "Dwight Morning   (8:01 AM):   $DWIGHT_AM"
-echo "Kelly Viral      (9:01,1:01): $KELLY_AMPM"
-echo "Ross Engineering (10:01 AM):  $ROSS_AM"
-echo "Dwight Afternoon (4:01 PM):   $DWIGHT_PM"
-echo "Kelly X Drafts   (5:01 PM):   $KELLY_PM"
-echo "Rachel LinkedIn  (5:01 PM):   $RACHEL_PM"
+echo "Dwight Morning   (8:01 AM):        $DWIGHT_AM"
+echo "Kelly Viral      (9:01,1:01):      $KELLY_AMPM"
+echo "Ross Engineering (10:01 AM):       $ROSS_AM"
+echo "Dwight Afternoon (4:01 PM):        $DWIGHT_PM"
+echo "Kelly X Drafts   (5:01 PM):        $KELLY_PM"
+echo "Rachel LinkedIn  (5:01 PM):        $RACHEL_PM"
+echo "Monica Heartbeat (${OPENCLAW_HEARTBEAT_CRON}): $MONICA_HEARTBEAT"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo
 echo "Next: paste these IDs into HEARTBEAT.md if they changed."

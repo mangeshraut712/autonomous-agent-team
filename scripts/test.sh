@@ -154,11 +154,11 @@ echo ""
 # 4. Cron jobs
 echo "[ 4/6 ] Cron Jobs"
 CRON_COUNT="$("${OC[@]}" cron list --json 2>/dev/null | jq -r '(.total // (.jobs | length) // length // 0)' 2>/dev/null || echo "0")"
-if [ "$CRON_COUNT" -ge 6 ] 2>/dev/null; then
-  green "$CRON_COUNT cron jobs registered (expected ≥6)"
+if [ "$CRON_COUNT" -ge 7 ] 2>/dev/null; then
+  green "$CRON_COUNT cron jobs registered (expected ≥7)"
   inc_pass
 elif [ "$CRON_COUNT" -gt 0 ] 2>/dev/null; then
-  yellow "$CRON_COUNT cron jobs found (expected 6)"
+  yellow "$CRON_COUNT cron jobs found (expected 7)"
 else
   red "No cron jobs found — run: make cron-install"
 fi

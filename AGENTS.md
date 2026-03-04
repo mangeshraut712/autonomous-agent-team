@@ -35,6 +35,11 @@ You wake up fresh each session. These files are your continuity:
 - Write a short summary of what you did to today's memory file.
 - If you learned something important, distill it into `MEMORY.md`.
 
+### Before Any Context Compaction or Reset
+- Before compaction, flush key learnings into `memory/YYYY-MM-DD.md` first.
+- If the learning should survive beyond today, also append a concise version to `MEMORY.md`.
+- Never compact/reset before writing this flush.
+
 ## 3. Intel Handoff (Research-Dependent Agents)
 
 If you are Kelly, Rachel, or Pam:

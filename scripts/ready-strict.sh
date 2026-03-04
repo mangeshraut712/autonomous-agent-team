@@ -136,10 +136,10 @@ printf '[ 4/7 ] Cron scheduler\n'
 CRON_JSON="$(mktemp)"
 if "${OC_CMD[@]}" cron list --json >"$CRON_JSON" 2>/dev/null; then
   CRON_COUNT="$(jq -r '(.total // (.jobs | length) // length // 0)' "$CRON_JSON" 2>/dev/null || echo 0)"
-  if [[ "$CRON_COUNT" =~ ^[0-9]+$ ]] && (( CRON_COUNT >= 6 )); then
+  if [[ "$CRON_COUNT" =~ ^[0-9]+$ ]] && (( CRON_COUNT >= 7 )); then
     green "Cron jobs registered: $CRON_COUNT"
   elif [[ "$CRON_COUNT" =~ ^[0-9]+$ ]] && (( CRON_COUNT > 0 )); then
-    yellow "Cron jobs registered: $CRON_COUNT (expected at least 6)"
+    yellow "Cron jobs registered: $CRON_COUNT (expected at least 7)"
   else
     red "Could not verify cron jobs"
   fi
