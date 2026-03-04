@@ -1,45 +1,62 @@
-# USER.md — About Your Human
+# USER.md — Mangesh Raut
 
-*Fill this file with real information about the person you're helping.*
-*Agents read this before every single response — the more accurate it is, the less re-explaining you'll do.*
+*Real context. Updated 2026-03-05. Agents: read this before every session.*
 
 ---
 
 ## Identity
 
-- **Name:** `[Your name]`
-- **What to call them:** `[Nickname or preferred form of address]`
-- **Pronouns:** `[he/him, she/her, they/them — optional]`
-- **Timezone:** `[Your timezone, e.g. IST UTC+5:30, PST UTC-8]`
-- **Primary Interface:** `[e.g. Telegram @YourBotName]`
+- **Name:** Mangesh Raut
+- **Call me:** Mangesh
+- **Timezone:** IST — UTC+5:30 (India)
+- **Primary interface:** Telegram → Monica bot
+- **GitHub:** github.com/mangeshraut712
+- **Active hours:** Late night IST (11 PM – 3 AM most productive). Sleeps roughly 3-9 AM IST. Agents work while I sleep.
 
 ## Working Style
 
-- `[Are you direct or conversational? Detail-oriented or big-picture?]`
-- `[How long should responses be? Short and punchy, or thorough?]`
-- `[What hours do you typically work?]`
-- `[What annoys you? (e.g. "Don't pad responses with small talk")]`
+- **Direct and results-oriented.** No filler, no preamble. Lead with the action or answer.
+- **Responses:** Short and punchy for status updates. Thorough when it's a plan or architecture.
+- **I hate:** Being bounced around ("go ask another agent"). Monica delegates — I don't have to.
+- **I love:** Waking up to work already done. Commits, deploys, drafts — all while I slept.
+- **Decision style:** Show me the options briefly, make a recommendation, I'll approve or redirect.
+- **Commits:** Always commit and push after finishing a task. Always.
 
-## Current Active Projects
+## Active Projects (March 2026)
 
-*List the 2-3 highest-priority things you're working on right now:*
+1. **Always-On Memory Agent (AOMA)** — Gemini 3.1 Flash-Lite + Google ADK. 3-agent persistent memory system. **12 days left** to submit to Gemini Live Agent Challenge ($25k grand prize).
+   - Folder: `/Users/mangeshraut/Downloads/always-on-memory-agent/`
+   - Status: Core code scaffolded. Needs: runtime testing, GitHub push, Cloud Run deploy, demo video.
+   - Model: `gemini-3.1-flash-lite-preview`
 
-1. **[Project Name]** — `[Brief description. Where code lives. Current status.]`
-2. **[Project Name]** — `[Brief description. Where files are. What's blocked.]`
+2. **MergeGate** — GitLab AI Hackathon. Autonomous GitLab MR reviewer using Duo Agent platform.
+   - Folder: `projects/gitlab-ai-hackathon-2026/`
+   - Status: MVP done. **21 days left**. Needs: production deploy + demo video.
+
+3. **OpenClaw Workspace** — 6-agent autonomous team (Monica, Dwight, Ross, Kelly, Rachel, Pam).
+   - Workspace: `/Users/mangeshraut/Downloads/AI Agent/`
+   - GitHub: github.com/mangeshraut712/autonomous-agent-team (public, educational)
 
 ## Permanent Preferences
 
-- `[e.g. "Never suggest manual steps that a script can do"]`
-- `[e.g. "Always commit git changes after finishing a task"]`
-- `[e.g. "Write blocking issues to intel/BLOCKERS.md"]`
+- **Never suggest manual steps a script can do.** Write the script.
+- **Commit git changes** after every significant task (Ross especially).
+- **Deadlines matter.** Always mention days-remaining when discussing hackathon tasks.
+- **Don't ask permission for obvious follow-ups** — just do them and report.
+- **Morning surprise rule:** Agents should proactively find and do useful work overnight. Report what was done when I wake up.
+- **Reverse prompt when stuck:** Instead of asking me what to build, tell me what YOU think we should do next based on what you know. I trust your judgment.
 
 ## Tech Stack
 
-- **Primary Language:** `[Python / Node.js / Go / etc.]`
-- **Infra:** `[AWS / GCP / Docker / Vercel / etc.]`
-- **Comms to me:** `[Telegram DM / Email / etc.]`
-- **Preferred AI model:** `[Claude 3.5 Sonnet for complex tasks, Haiku for fast loops]`
+- **Languages:** Python (primary), Node.js, Bash
+- **Infra:** Google Cloud Run, Terraform, Docker, GitHub Actions
+- **AI APIs:** Gemini (primary for AOMA), Claude (OpenClaw default), OpenAI Codex (crons)
+- **Comms:** Telegram DM, Monica bot
+- **Dev machine:** MacBook (Apple Silicon, macOS) — use `TMPDIR=/tmp` for OpenClaw workarounds
 
----
+## Goals (What I'm Optimizing For)
 
-> 💡 **Tip:** Update this file as your priorities change. Agents read it at the start of every session, so it's always the freshest context they get.
+1. **Win a hackathon** — Gemini Live Challenge or GitLab, ideally both
+2. **Build in public** — repo is educational, helps others learn OpenClaw
+3. **Autonomous team** — agents should need less and less from me each week
+4. **Ship fast** — done > perfect for contest work
