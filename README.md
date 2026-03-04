@@ -1,105 +1,88 @@
 # autonomous-agent-team
 
-Production-ready OpenClaw workspace for a 6-agent AI team: research, content drafting, engineering support, and newsletter prep with Telegram delivery and cron automation.
+Production-ready OpenClaw workspace template for a 6-agent team (Monica, Dwight, Kelly, Rachel, Ross, Pam) with Telegram delivery, cron automation, and source-controlled agent behavior files.
 
-## What You Get
+This repository is **not** the OpenClaw core project. It is a workspace on top of OpenClaw.
 
-- One OpenClaw instance with six specialized agents.
-- **Agent-to-Agent Coordination:** Agents coordinate actively via `sessions_send` + `sessions_list` tools natively, using persistent storage (`intel/`) as fallback.
-- **Native Custom Skills:** Our `parallel-search` intelligence engine is registered as a native OpenClaw skill!
-- **Sandboxing & Security:** Safely run group/channel commands inside Docker natively (`sandbox.mode: "non-main"`).
-- **Tailscale Serve / Funnel:** Expose your local gateway safely to the internet natively without ngrok mappings.
-- Daily/long-term memory workflow for each agent.
-- Cron scheduling for unattended runs.
-- Telegram bot interface for approvals and status.
-- **WebChat Support:** Serve a live UI dashboard and web chat instantly from your local IP.
+- OpenClaw core: https://github.com/openclaw/openclaw
+- OpenClaw docs: https://docs.openclaw.ai
+- OpenClaw site: https://openclaw.ai
 
-## Agent Roster
+## What Was Fixed/Upgraded
 
-| Agent | Role | Primary Output |
-|---|---|---|
-| Monica | Chief of Staff | Planning, delegation, heartbeat checks |
-| Dwight | Research | `intel/DAILY-INTEL.md`, `intel/data/YYYY-MM-DD.json` |
-| Kelly | X/Twitter | Draft tweet threads |
-| Rachel | LinkedIn | Draft professional posts |
-| Ross | Engineering | Task plans, reviews, implementation notes |
-| Pam | Newsletter | Newsletter and long-form drafts |
-
-## Repository Layout
-
-```text
-.
-├── SOUL.md
-├── AGENTS.md
-├── MEMORY.md
-├── HEARTBEAT.md
-├── agents/
-│   ├── dwight/, kelly/, rachel/, ross/, pam/
-├── docs/
-├── intel/
-├── skills/                  ← Native OpenClaw skills path
-│   └── parallel-search/
-└── scripts/
-    ├── add-cron-jobs.sh
-    ├── reset-workspace.sh
-    ├── workspace-setup.sh   ← Run this to attach skills to OpenClaw config
-    ├── test.sh
-    ├── status.sh
-    └── parallel-search.sh
-```
+- Added stable operator targets: `make ready-strict`, `make notify`, `make notifier-install`.
+- Added strict diagnostics aligned to official runbooks (`status`, `gateway probe`, `doctor`, `channels status --probe`).
+- Hardened cron installer (`scripts/add-cron-jobs.sh`) to avoid model lock-in and gateway mismatch issues.
+- Added environment sync (`scripts/sync-openclaw-env.sh`) so gateway service sees your API keys.
+- Expanded provider support docs/env examples for official `web_search` providers (Brave, Gemini, Kimi, Perplexity, Grok) plus Parallel fallback.
+- Cleaned repo flow for public GitHub use while keeping private work excluded.
 
 ## Quick Start
 
-1. Install OpenClaw:
-
-```bash
-curl -fsSL https://openclaw.ai/install.sh | bash
-```
-
-2. Clone and configure:
+1. Clone and enter repository.
 
 ```bash
 git clone https://github.com/mangeshraut712/autonomous-agent-team.git
 cd autonomous-agent-team
 cp .env.example .env
-
-# Apply native openclaw features like skills and Tailscale
-chmod +x scripts/workspace-setup.sh
-./scripts/workspace-setup.sh
 ```
 
-3. Fill `.env`:
+2. Fill `.env` with Telegram + provider keys.
 
-```env
-TELEGRAM_BOT_TOKEN=...
-TELEGRAM_CHAT_TARGET=...
-# Optional fallback web search
-PARALLEL_API_KEY=...
-```
-
-4. Run onboarding:
+3. If OpenClaw is not installed yet:
 
 ```bash
+curl -fsSL https://openclaw.ai/install.sh | bash
 openclaw onboard
 ```
 
-5. Register cron jobs:
+4. Apply workspace settings and sync env into gateway service environment:
 
 ```bash
-chmod +x scripts/add-cron-jobs.sh
-./scripts/add-cron-jobs.sh
+make workspace-setup
+make env-sync
 ```
 
-6. Verify health:
+5. Restart gateway and run strict checks:
 
 ```bash
-./scripts/test.sh
-./scripts/status.sh
+openclaw gateway restart
+make ready-strict
 ```
 
-## Telegram Settings
+6. Install default cron schedule and optional status notifier:
 
-Recommended secure policy:
+```bash
+make cron-install
+make notifier-install
+```
+
+7. Send Telegram test notification:
+
+```bash
+make notify
+```
+
+## Canonical Workspace Path
+
+Use one canonical path only:
+
+- ✅ `/Users/mangeshraut/Downloads/AI Agent`
+- ❌ `.../AI Agent ` (trailing-space variant)
+
+`make ready-strict` checks for trailing-space path collisions.
+
+## Telegram Setup (Recommended)
+
+If you prefer pairing-first security:
+
+```bash
+openclaw config set channels.telegram.dmPolicy pairing
+openclaw gateway restart
+openclaw pairing approve telegram <PAIRING_CODE>
+```
+
+Then harden to allowlist:
 
 ```bash
 openclaw config set channels.telegram.dmPolicy allowlist
@@ -109,70 +92,102 @@ openclaw config set channels.telegram.groupAllowFrom '["<YOUR_TELEGRAM_USER_ID>"
 openclaw gateway restart
 ```
 
-Pairing alternative:
+Detailed guide: [docs/telegram-setup.md](docs/telegram-setup.md)
+
+## Web Search Providers
+
+OpenClaw official `web_search` providers:
+
+- Brave (`BRAVE_API_KEY`)
+- Gemini (`GEMINI_API_KEY`)
+- Kimi / Moonshot (`KIMI_API_KEY` or `MOONSHOT_API_KEY`)
+- Perplexity (`PERPLEXITY_API_KEY`)
+- Grok (`XAI_API_KEY`)
+
+Custom fallback in this repo:
+
+- Parallel Search (`PARALLEL_API_KEY`) via `scripts/parallel-search.sh`
+
+Provider setup guide: [docs/web-search-providers.md](docs/web-search-providers.md)
+
+## Make Targets
 
 ```bash
-openclaw config set channels.telegram.dmPolicy pairing
-openclaw gateway restart
-openclaw pairing approve telegram <PAIRING_CODE>
+make help
+make workspace-setup
+make env-sync
+make status
+make test
+make ready-strict
+make cron-install
+make notify
+make notifier-install
+make reset-workspace
 ```
 
-## Telegram Workflow
+## Project Structure
 
-- Send direct test message:
-
-```bash
-openclaw message send --channel telegram --target <YOUR_CHAT_ID> --message "OpenClaw test"
+```text
+.
+├── SOUL.md
+├── AGENTS.md
+├── MEMORY.md
+├── HEARTBEAT.md
+├── agents/
+│   ├── dwight/
+│   ├── kelly/
+│   ├── rachel/
+│   ├── ross/
+│   └── pam/
+├── docs/
+├── intel/
+├── scripts/
+└── skills/
 ```
 
-- Probe Telegram channel health:
+## Daily Operations
 
-```bash
-openclaw channels status --probe
-```
+- System snapshot: `make status`
+- Strict readiness: `make ready-strict`
+- Health checks: `make test`
+- Cron list: `openclaw cron list`
+- Cron runs: `openclaw cron runs --id <JOB_ID> --limit 20`
+- Channel probe: `openclaw channels status --probe`
 
-## Web Search Fallback (Parallel)
+## Keep Private Work Out Of Public Repo
 
-If Brave API is unavailable, Dwight can use:
+Private challenge work is excluded from Git tracking:
 
-```bash
-scripts/parallel-search.sh \
-  --objective "latest AI/devtools launches relevant to software teams" \
-  --mode agentic \
-  --max-results 8 \
-  --format markdown
-```
+- `projects/gitlab-ai-hackathon-2026/`
 
-## Keep Private Work Out of GitHub
-
-This repository is public-ready. Keep project-specific client/submission work out of tracking.
-
-Recommended:
-
-- Store private project files under `projects/`.
-- Ensure private subfolders are added to `.gitignore` before commit.
-- Verify before push:
+Before pushing:
 
 ```bash
 git status
 git ls-files | rg '^projects/'
 ```
 
-## Security Notes
+## Troubleshooting Ladder (Official-Aligned)
 
-- Do not commit `.env` or `.openclaw/`.
-- Revoke and rotate any token exposed in logs.
-- Keep runtime intel/memory artifacts out of Git commits.
-- Run periodic checks:
+Run in order:
 
 ```bash
-openclaw security audit --deep
+openclaw status
+openclaw status --all
+openclaw gateway probe
+openclaw gateway status
+openclaw doctor --non-interactive
+openclaw channels status --probe
+openclaw logs --follow
 ```
 
 ## Documentation
 
-See `docs/README.md` and `docs/telegram-setup.md` for setup and command references.
+- [docs/README.md](docs/README.md)
+- [docs/operations.md](docs/operations.md)
+- [docs/telegram-setup.md](docs/telegram-setup.md)
+- [docs/web-search-providers.md](docs/web-search-providers.md)
 
 ## License
 
-MIT — see `LICENSE`.
+MIT — see [LICENSE](LICENSE)

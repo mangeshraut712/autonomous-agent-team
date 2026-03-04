@@ -1,42 +1,49 @@
 # Documentation Index
 
-## Setup Guides
+## Core Guides
 
-| File | Purpose |
-|---|---|
-| `telegram-setup.md` | Telegram settings, pairing policy, allowlist config, testing, troubleshooting |
+- [operations.md](operations.md): where to start (Telegram, dashboard, terminal), background flow, status checks.
+- [telegram-setup.md](telegram-setup.md): secure Telegram configuration, pairing/allowlist, validation.
+- [web-search-providers.md](web-search-providers.md): official OpenClaw web providers + Parallel fallback.
 
-## Operational Commands
+## Operator Commands
 
-### Health + Status
+### Readiness + Status
 
 ```bash
-./scripts/test.sh
-./scripts/status.sh
-./scripts/reset-workspace.sh
-openclaw health
-openclaw status --probe
+make test
+make ready-strict
+make status
+openclaw status
+openclaw status --all
+openclaw gateway probe
+openclaw gateway status
+openclaw channels status --probe
 ```
 
 ### Cron
 
 ```bash
-openclaw cron list
+make cron-install
 openclaw cron status
-openclaw cron run <jobId>
-openclaw cron runs <jobId>
+openclaw cron list
+openclaw cron runs --id <jobId> --limit 20
+openclaw cron run <jobId> --force
 ```
 
 ### Telegram
 
 ```bash
+make notify
+openclaw pairing list telegram
 openclaw pairing approve telegram <PAIRING_CODE>
-openclaw message send --channel telegram --target <CHAT_ID> --message "test"
 ```
 
-### Security
+### Security + Repair
 
 ```bash
+openclaw doctor --non-interactive
 openclaw security audit --deep
 openclaw security audit --fix
+openclaw gateway restart
 ```

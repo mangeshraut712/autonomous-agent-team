@@ -1,39 +1,47 @@
 #!/usr/bin/env bash
 # scripts/workspace-setup.sh
-# Configures advanced OpenClaw settings for this workspace.
-# Run this once after cloning.
+# Configure this repository as an OpenClaw workspace.
 
 set -euo pipefail
 
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$ROOT_DIR"
+
 if ! command -v openclaw >/dev/null 2>&1; then
-  echo "Error: openclaw CLI is required."
+  echo "Error: openclaw CLI is required. Install via: npm install -g openclaw@latest"
   exit 1
 fi
 
-ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+CFG="$HOME/.openclaw/openclaw.json"
+SKILLS_DIR="$ROOT_DIR/skills"
 
-echo "🦞 Applying advanced OpenClaw configuration..."
+echo "🦞 Applying workspace configuration..."
 
-# 1. Register the current path as the root OpenClaw workspace
 openclaw config set agents.defaults.workspace "$ROOT_DIR"
-echo "✅ Default workspace set to $ROOT_DIR"
+echo "✅ agents.defaults.workspace -> $ROOT_DIR"
 
-# 2. Add local skills to the path
-openclaw config set skills.load.extraDirs '["'"$ROOT_DIR"'/skills"]'
-echo "✅ Local skills path registered ($ROOT_DIR/skills)"
+if [[ -d "$SKILLS_DIR" ]]; then
+  EXTRA_DIRS='[]'
+  if [[ -f "$CFG" ]]; then
+    EXTRA_DIRS="$(jq -c --arg d "$SKILLS_DIR" '((.skills.load.extraDirs // []) + [$d]) | unique' "$CFG" 2>/dev/null || echo '[]')"
+  else
+    EXTRA_DIRS="$(jq -cn --arg d "$SKILLS_DIR" '[$d]')"
+  fi
+  openclaw config set skills.load.extraDirs "$EXTRA_DIRS"
+  echo "✅ skills.load.extraDirs includes $SKILLS_DIR"
+else
+  echo "⚠️  skills/ directory not found; skipping skills.load.extraDirs"
+fi
 
-# 3. Allow bundled features + our newly added parallel-search
-openclaw config set skills.allowBundled '["parallel-search", "healthcheck", "session-logs", "summarize"]'
-echo "✅ Hand-picked skills whitelisted"
+if [[ -n "${OPENCLAW_WEB_PROVIDER:-}" ]]; then
+  openclaw config set tools.web.search.provider "$OPENCLAW_WEB_PROVIDER"
+  echo "✅ tools.web.search.provider -> $OPENCLAW_WEB_PROVIDER"
+fi
 
-# 4. Agent security: we encourage non-main sessions run inside Docker.
-echo "⚠️  To enable Docker Sandboxing for extra security, run:"
-echo "openclaw config set agents.defaults.sandbox.mode \"non-main\""
-
-# 5. Tailscale support
-echo "⚠️  To expose your Gateway securely via Tailscale Serve, run:"
-echo "openclaw config set gateway.tailscale.mode \"serve\""
-
-echo ""
-echo "🚀 Workspace upgrade complete! Now restart your gateway:"
-echo "openclaw gateway restart"
+echo
+echo "Optional but recommended: sync project .env to gateway service env"
+echo "  bash scripts/sync-openclaw-env.sh"
+echo
+echo "Then run:"
+echo "  openclaw doctor --non-interactive"
+echo "  openclaw gateway restart"

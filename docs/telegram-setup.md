@@ -1,19 +1,40 @@
-# Telegram Settings and Setup
+# Telegram Setup
 
-Use this guide to configure Telegram correctly for OpenClaw in a public-safe way.
+This guide follows official OpenClaw Telegram policy behavior.
 
-## Required Settings
+## 1. Create/Rotate Bot Token
 
-Set these values in `.env`:
+1. Open `@BotFather`
+2. Run `/newbot` (or `/revoke` + `/token` to rotate)
+3. Copy token
+4. Update `.env` and run:
 
-```env
-TELEGRAM_BOT_TOKEN=<token from @BotFather>
-TELEGRAM_CHAT_TARGET=<your numeric Telegram user/chat id>
+```bash
+make env-sync
+openclaw gateway restart
 ```
 
-## Recommended Telegram Policy
+If any token was exposed in terminal/screenshots, rotate immediately.
 
-Set strict DM/group policies and allowlists:
+## 2. Configure DM Policy
+
+Start with pairing (safer first run):
+
+```bash
+openclaw config set channels.telegram.dmPolicy pairing
+openclaw gateway restart
+```
+
+From Telegram, message your bot and approve pairing:
+
+```bash
+openclaw pairing list telegram
+openclaw pairing approve telegram <PAIRING_CODE>
+```
+
+## 3. Move To Allowlist (Recommended for Production)
+
+Use numeric Telegram user ID (not bot username):
 
 ```bash
 openclaw config set channels.telegram.dmPolicy allowlist
@@ -23,56 +44,44 @@ openclaw config set channels.telegram.groupAllowFrom '["<YOUR_TELEGRAM_USER_ID>"
 openclaw gateway restart
 ```
 
-If you prefer pairing flow (safer for first setup):
+## 4. Validate Telegram End-To-End
 
 ```bash
-openclaw config set channels.telegram.dmPolicy pairing
-openclaw gateway restart
-```
-
-Then approve each pairing request:
-
-```bash
-openclaw pairing approve telegram <PAIRING_CODE>
-```
-
-## How to Get Your Telegram User ID
-
-1. Message your bot with `/start` while `dmPolicy=pairing`, then read the user id from the pairing message.
-2. Or use a Telegram utility bot like `@userinfobot`.
-
-## Basic Validation
-
-```bash
-# Check bot token
+# Token validity
 curl "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/getMe"
 
-# Send test message
-openclaw message send --channel telegram --target <YOUR_CHAT_ID> --message "OpenClaw Telegram test"
-
-# Probe channel health
+# OpenClaw transport probe
 openclaw channels status --probe
+
+# Direct send
+make notify
 ```
 
-## Troubleshooting
+## 5. Troubleshooting
 
-### Bot not responding
+No replies:
 
 ```bash
-openclaw health
+openclaw status
 openclaw gateway status
-openclaw logs --limit 200
+openclaw channels status --probe
+openclaw logs --follow
 ```
 
-### Pairing keeps failing
+Pairing code appears but approve fails:
+
+- Ensure gateway is running from same profile/config
+- Re-run `openclaw pairing list telegram`
+- Use exact code shown in Telegram
+
+`dmPolicy=allowlist` but bot ignores messages:
+
+- Check `channels.telegram.allowFrom` has your numeric user ID
+- Do not use `@username` here
+
+Gateway connected but Telegram still blocked:
 
 ```bash
-openclaw pairing list
-openclaw pairing approve telegram <PAIRING_CODE>
-```
-
-### Gateway/channel stale state
-
-```bash
+openclaw doctor --non-interactive
 openclaw gateway restart
 ```

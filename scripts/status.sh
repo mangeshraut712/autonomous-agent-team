@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# scripts/status.sh
+
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -10,8 +12,12 @@ else
   OC=(npx --cache=/tmp/npm_cache -y openclaw@latest)
 fi
 
-echo "=== OpenClaw Health ==="
-"${OC[@]}" health || true
+echo "=== Workspace ==="
+echo "$ROOT"
+
+echo
+echo "=== OpenClaw Status ==="
+"${OC[@]}" status || true
 
 echo
 echo "=== Gateway Status ==="
@@ -22,6 +28,24 @@ echo "=== Channel Probe ==="
 "${OC[@]}" channels status --probe || true
 
 echo
-echo "=== Cron Summary ==="
-"${OC[@]}" cron status --json 2>/dev/null | jq '.' || true
-"${OC[@]}" cron list --json 2>/dev/null | jq '.jobs[] | {name,id,enabled,sessionKey}' || true
+echo "=== Cron Status ==="
+CRON_STATUS_JSON="$(mktemp)"
+if "${OC[@]}" cron status --json >"$CRON_STATUS_JSON" 2>/dev/null; then
+  jq '{enabled: .enabled, nextWakeAt: (.nextWakeAt // .nextWakeAtMs // null), total: (.total // null)}' "$CRON_STATUS_JSON" 2>/dev/null || cat "$CRON_STATUS_JSON"
+else
+  "${OC[@]}" cron status || true
+fi
+rm -f "$CRON_STATUS_JSON"
+
+echo
+echo "=== Cron Jobs ==="
+"${OC[@]}" cron list --json 2>/dev/null | jq -r '.jobs[]? | "- \(.name) | id=\(.id) | enabled=\(.enabled)"' || true
+
+echo
+echo "=== Web Search Provider (Configured) ==="
+CFG="$HOME/.openclaw/openclaw.json"
+if [[ -f "$CFG" ]]; then
+  jq -r '.tools.web.search.provider // "(auto)"' "$CFG" 2>/dev/null || true
+else
+  echo "~/.openclaw/openclaw.json not found"
+fi

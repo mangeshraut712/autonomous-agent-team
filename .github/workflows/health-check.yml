@@ -1,67 +1,69 @@
-name: OpenClaw Health Check
+name: Repository Health Check
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
   validate:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout Code
+      - name: Checkout
         uses: actions/checkout@v4
-      
-      - name: Validate Markdown Files
+
+      - name: Validate required files
         run: |
-          # Basic sanity checks on core markdown files.
-          failed=0
-          for file in \
-            SOUL.md \
-            AGENTS.md \
-            MEMORY.md \
-            HEARTBEAT.md \
-            agents/dwight/SOUL.md \
-            agents/dwight/AGENTS.md \
-            agents/dwight/MEMORY.md \
-            agents/kelly/SOUL.md \
-            agents/kelly/AGENTS.md \
-            agents/kelly/MEMORY.md \
-            agents/rachel/SOUL.md \
-            agents/rachel/AGENTS.md \
-            agents/ross/SOUL.md \
-            agents/ross/AGENTS.md \
-            agents/pam/SOUL.md \
-            agents/pam/AGENTS.md \
+          set -euo pipefail
+          required=(
+            README.md
+            AGENTS.md
+            SOUL.md
+            MEMORY.md
+            HEARTBEAT.md
+            .env.example
+            .gitignore
+            Makefile
+            docs/README.md
+            docs/operations.md
+            docs/telegram-setup.md
+            docs/web-search-providers.md
+            scripts/add-cron-jobs.sh
+            scripts/status.sh
+            scripts/test.sh
+            scripts/ready-strict.sh
+            scripts/notify.sh
+            scripts/notifier-install.sh
+            scripts/sync-openclaw-env.sh
+            scripts/workspace-setup.sh
             scripts/parallel-search.sh
-          do
-            if [ ! -f "$file" ]; then
-              echo "❌ ERROR: Missing required file $file. A symlink or the actual file must exist!"
-              failed=1
-            else
-              echo "✅ $file exists."
+          )
+
+          for file in "${required[@]}"; do
+            if [[ ! -f "$file" ]]; then
+              echo "Missing required file: $file"
+              exit 1
             fi
           done
-          
-          if [ "$failed" -eq 1 ]; then
-            exit 1
-          fi
 
-      - name: Ensure Shell Scripts are Executable
+      - name: Shell syntax checks
         run: |
-          chmod +x scripts/*.sh || true
+          set -euo pipefail
+          chmod +x scripts/*.sh
+          bash -n scripts/*.sh
 
-      - name: Check Environment Syntax
+      - name: Makefile sanity
         run: |
-          if [ -f "scripts/parallel-search.sh" ]; then
-            bash -n scripts/parallel-search.sh
-            echo "✅ parallel-search.sh syntax ok."
-          fi
-          if [ -f "scripts/add-cron-jobs.sh" ]; then
-            bash -n scripts/add-cron-jobs.sh
-            echo "✅ add-cron-jobs.sh syntax ok."
-          fi
+          set -euo pipefail
+          make help
+
+      - name: .env.example sanity
+        run: |
+          set -euo pipefail
+          grep -q '^TELEGRAM_BOT_TOKEN=' .env.example
+          grep -q '^TELEGRAM_CHAT_TARGET=' .env.example
 
       - name: Success
-        run: echo "🎉 Workspace structure and logic passed."
+        run: echo "Repository checks passed"
