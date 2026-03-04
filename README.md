@@ -5,11 +5,14 @@ Production-ready OpenClaw workspace for a 6-agent AI team: research, content dra
 ## What You Get
 
 - One OpenClaw instance with six specialized agents.
-- File-based coordination (`intel/` handoff) instead of fragile cross-service orchestration.
+- **Agent-to-Agent Coordination:** Agents coordinate actively via `sessions_send` + `sessions_list` tools natively, using persistent storage (`intel/`) as fallback.
+- **Native Custom Skills:** Our `parallel-search` intelligence engine is registered as a native OpenClaw skill!
+- **Sandboxing & Security:** Safely run group/channel commands inside Docker natively (`sandbox.mode: "non-main"`).
+- **Tailscale Serve / Funnel:** Expose your local gateway safely to the internet natively without ngrok mappings.
 - Daily/long-term memory workflow for each agent.
 - Cron scheduling for unattended runs.
 - Telegram bot interface for approvals and status.
-- Portable scripts for setup, health checks, and web-search fallback.
+- **WebChat Support:** Serve a live UI dashboard and web chat instantly from your local IP.
 
 ## Agent Roster
 
@@ -31,17 +34,15 @@ Production-ready OpenClaw workspace for a 6-agent AI team: research, content dra
 ├── MEMORY.md
 ├── HEARTBEAT.md
 ├── agents/
-│   ├── dwight/
-│   ├── kelly/
-│   ├── rachel/
-│   ├── ross/
-│   └── pam/
+│   ├── dwight/, kelly/, rachel/, ross/, pam/
 ├── docs/
 ├── intel/
-│   └── data/
+├── skills/                  ← Native OpenClaw skills path
+│   └── parallel-search/
 └── scripts/
     ├── add-cron-jobs.sh
     ├── reset-workspace.sh
+    ├── workspace-setup.sh   ← Run this to attach skills to OpenClaw config
     ├── test.sh
     ├── status.sh
     └── parallel-search.sh
@@ -61,6 +62,10 @@ curl -fsSL https://openclaw.ai/install.sh | bash
 git clone https://github.com/mangeshraut712/autonomous-agent-team.git
 cd autonomous-agent-team
 cp .env.example .env
+
+# Apply native openclaw features like skills and Tailscale
+chmod +x scripts/workspace-setup.sh
+./scripts/workspace-setup.sh
 ```
 
 3. Fill `.env`:
