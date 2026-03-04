@@ -113,7 +113,7 @@ fi
 
 printf '\n'
 printf '[ 2/7 ] Required local files\n'
-for f in README.md AGENTS.md SOUL.md MEMORY.md HEARTBEAT.md scripts/add-cron-jobs.sh scripts/test.sh scripts/status.sh scripts/notify.sh scripts/notifier-install.sh; do
+for f in README.md AGENTS.md SOUL.md MEMORY.md HEARTBEAT.md scripts/add-cron-jobs.sh scripts/test.sh scripts/status.sh scripts/notify.sh scripts/notifier-install.sh scripts/enforce-root-boundary.sh; do
   if [[ -f "$f" ]]; then
     green "$f"
   else

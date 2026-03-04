@@ -49,6 +49,11 @@ openclaw channels status --probe
 openclaw logs --follow
 ```
 
+Health endpoint note:
+
+- `curl http://127.0.0.1:18789/health` returns the Control UI HTML shell in this OpenClaw build.
+- Use `openclaw gateway probe` as the authoritative health check.
+
 Interpretation:
 
 - `gateway status`: service/runtime and RPC health.
@@ -95,6 +100,12 @@ Always run from canonical workspace path without trailing space:
 
 `make ready-strict` checks this and warns if a trailing-space sibling exists.
 
+Sibling repository note:
+
+- `/Users/mangeshraut/Downloads/always-on-memory-agent` is a separate project with its own git history.
+- It is intentionally outside this workspace and is not required for OpenClaw runtime here.
+- Keep private contest code in external repos or in `projects/` (gitignored) to avoid accidental public commits.
+
 ## Common Recovery Actions
 
 Gateway unhealthy:
@@ -116,6 +127,12 @@ Cron exists but no results in intel:
 1. Run `openclaw cron runs --id <jobId> --limit 20`
 2. Check logs: `openclaw logs --follow`
 3. Re-run manually: `openclaw cron run <jobId> --force`
+
+Memory search fails with `insufficient_quota`:
+
+1. Confirm with `openclaw memory index --force --verbose`
+2. Keep agents running with file-based fallback (`MEMORY.md` + `memory/YYYY-MM-DD.md`)
+3. Record temporary degradation in `intel/BLOCKERS.md` and clear once embeddings quota is restored
 
 ## Suggested Daily Cadence
 

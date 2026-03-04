@@ -1,7 +1,7 @@
 SHELL := /bin/bash
 .DEFAULT_GOAL := help
 
-.PHONY: help workspace-setup env-sync cron-install status test ready-strict notify notifier-install drift-audit reset-workspace
+.PHONY: help workspace-setup env-sync cron-install status test ready-strict notify notifier-install drift-audit reset-workspace boundary-fix
 
 help:
 	@echo "autonomous-agent-team commands"
@@ -10,6 +10,7 @@ help:
 	@echo "  make cron-install      - Register 7 default cron jobs (incl. heartbeat)"
 	@echo "  make status            - Show OpenClaw status snapshot"
 	@echo "  make test              - Run workspace health checks"
+	@echo "  make boundary-fix      - Repair/validate root workspace boundary"
 	@echo "  make ready-strict      - Run strict production readiness checks"
 	@echo "  make notify            - Send Telegram test notification"
 	@echo "  make notifier-install  - Install recurring status notifier cron"
@@ -45,3 +46,6 @@ drift-audit:
 
 reset-workspace:
 	@bash scripts/reset-workspace.sh
+
+boundary-fix:
+	@bash scripts/enforce-root-boundary.sh --fix

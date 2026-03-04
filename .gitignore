@@ -20,6 +20,7 @@ intel/DAILY-INTEL.md
 intel/data/*.json
 intel/data/*.jsonl
 intel/data/*.tmp
+intel/TOKEN-AUDIT-*.md
 !intel/data/README.md
 
 # ─── Daily memory logs (local context, stays on your machine) ──────────────

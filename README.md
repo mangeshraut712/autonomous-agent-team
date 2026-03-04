@@ -4,7 +4,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![OpenClaw](https://img.shields.io/badge/powered%20by-OpenClaw-blueviolet)](https://openclaw.ai)
-[![Model](https://img.shields.io/badge/default%20model-Claude%203.5%20Sonnet-orange)](https://anthropic.com)
+[![Model](https://img.shields.io/badge/default%20model-Configurable%20(via%20.env)-orange)](.env.example)
 
 ---
 
@@ -64,18 +64,18 @@ Edit `.env` with your keys:
 ```bash
 # Required
 TELEGRAM_BOT_TOKEN=your_bot_token    # From @BotFather
-TELEGRAM_CHAT_TARGET=your_user_id    # Your Telegram user ID
+TELEGRAM_CHAT_TARGET=your_user_id    # Your Telegram numeric user ID
 
-# Choose a primary model provider (pick one)
-ANTHROPIC_API_KEY=sk-ant-...         # Recommended: Claude 3.5 Sonnet
-OPENAI_API_KEY=sk-proj-...           # Alternative: GPT-4o
+# Model provider (set at least one)
+OPENAI_API_KEY=sk-proj-...
+ANTHROPIC_API_KEY=sk-ant-...
 
-# For semantic memory (vector search)
-OPENAI_API_KEY=sk-proj-...           # Used for embeddings
+# Web search providers (pick one or more)
+KIMI_API_KEY=sk-...
+# OR: BRAVE_API_KEY / PERPLEXITY_API_KEY / XAI_API_KEY / GEMINI_API_KEY
 
-# For web search
-KIMI_API_KEY=sk-...                  # Kimi/Moonshot (recommended)
-# OR: BRAVE_API_KEY, PERPLEXITY_API_KEY, XAI_API_KEY
+# Optional: force cron model to avoid credit/budget issues
+OPENCLAW_CRON_MODEL=openai-codex/gpt-5.1-codex-mini
 ```
 
 ### 3. Configure OpenClaw
@@ -113,6 +113,39 @@ TMPDIR=/tmp bash scripts/start-gateway.sh
 ### 6. Send Monica a Message on Telegram!
 
 Message your bot. Monica will introduce herself and the team is live. 🎉
+
+### 7. Workspace Boundary Check (Important)
+
+This repo expects the canonical workspace path:
+
+```bash
+/Users/mangeshraut/Downloads/AI Agent
+```
+
+`always-on-memory-agent` is a sibling repository in `Downloads/`, not part of this repo runtime. Keep it separate unless you intentionally copy files.
+
+Run this anytime to verify boundary + runtime:
+
+```bash
+make boundary-fix
+make ready-strict
+```
+
+## 🖥️ Dashboards
+
+Use these interfaces to monitor and operate the system:
+
+- **OpenClaw Control UI (live gateway):** [http://127.0.0.1:18789/](http://127.0.0.1:18789/)
+- **Mission Control dashboard (local static UI):** [dashboard/index.html](dashboard/index.html)
+- **Token usage dashboard (local static UI):** [scripts/token-dashboard.html](scripts/token-dashboard.html)
+
+Open quickly from terminal:
+
+```bash
+open http://127.0.0.1:18789/
+open dashboard/index.html
+open scripts/token-dashboard.html
+```
 
 ---
 
@@ -184,17 +217,24 @@ autonomous-agent-team/
 │   └── openclaw-under-the-hood.md → Architecture deep-dive
 │
 ├── 🛠️ scripts/            → Shell utilities
-│   ├── start-gateway.sh   → Reliable gateway starter (macOS TMPDIR fix)
-│   ├── add-cron-jobs.sh   → Install all agent cron schedules
-│   ├── workspace-setup.sh → Register workspace + skills in OpenClaw
-│   ├── reset-workspace.sh → Clear daily memory for fresh test
-│   └── test.sh            → Full health check before demos
+│   ├── start-gateway.sh         → Reliable gateway starter (macOS TMPDIR fix)
+│   ├── add-cron-jobs.sh         → Install default agent cron schedules
+│   ├── notifier-install.sh      → Install/update recurring status notifier cron
+│   ├── enforce-root-boundary.sh → Hard boundary check/fix for workspace drift
+│   ├── status.sh                → Runtime snapshot (gateway, cron, provider)
+│   ├── ready-strict.sh          → Strict production readiness checks
+│   ├── test.sh                  → Health checks before production/demo
+│   └── token-dashboard.html     → Local token usage dashboard
+│
+├── 🖥️ dashboard/          → Local mission-control style UI
+│   └── index.html
 │
 ├── 🧠 memory/             → Daily logs (.gitignored, stays local)
 │   └── YYYY-MM-DD.md      → Created fresh each day by agents
 │
-├── Intel/                 → Research output (.gitignored, stays local)
-│   └── DAILY-INTEL.md     → Dwight writes here, Kelly/Rachel/Pam read
+├── intel/                 → Research output (.gitignored, stays local)
+│   ├── DAILY-INTEL.md     → Dwight writes here, Kelly/Rachel/Pam read
+│   └── BLOCKERS.md        → Shared runtime blockers + recovery log
 │
 ├── .env.example           → API key template
 ├── docker-compose.yml     → One-command deploy with Docker
@@ -241,7 +281,7 @@ Key settings this template sets up:
 {
   "agents": {
     "defaults": {
-      "model": { "primary": "anthropic/claude-3-5-sonnet-20241022" },
+      "model": { "primary": "provider/model-id" },
       "compaction": { "mode": "safeguard" },
       "sandbox": { "mode": "non-main" },
       "maxConcurrent": 6
@@ -270,16 +310,18 @@ Key settings this template sets up:
 ## 🔄 Make Targets
 
 ```bash
-make help            # Show all targets
-make workspace-setup # Register workspace + skills
-make env-sync        # Sync .env into gateway service
-make status          # System snapshot
-make test            # Full health check
-make ready-strict    # Pre-demo readiness check
-make cron-install    # Install agent cron schedules
-make notify          # Send test Telegram notification
-make drift-audit     # Detect config drift
-make reset-workspace # Clear daily memory for fresh test
+make help             # Show all targets
+make workspace-setup  # Register workspace + skills
+make env-sync         # Sync .env into gateway service
+make status           # Runtime snapshot
+make test             # Full health check
+make boundary-fix     # Repair/validate root workspace boundary
+make ready-strict     # Strict production readiness check
+make cron-install     # Install default agent cron schedules
+make notifier-install # Install/update recurring status notifier cron
+make notify           # Send test Telegram notification
+make drift-audit      # Detect config drift
+make reset-workspace  # Clear daily memory for fresh test
 ```
 
 ---
@@ -323,6 +365,10 @@ openclaw memory index --force
 
 # Agents not responding on Telegram?
 openclaw channels status --probe
+
+# Boundary drift / wrong folder writes?
+make boundary-fix
+bash scripts/enforce-root-boundary.sh
 
 # Full diagnostic:
 openclaw doctor --non-interactive

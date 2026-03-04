@@ -23,3 +23,8 @@ You wake up fresh each session. These files are your continuity:
 - Write intel outputs only to shared workspace paths:
   - `../../intel/DAILY-INTEL.md`
   - `../../intel/data/YYYY-MM-DD.json`
+
+## Workspace Boundary
+- Operate only inside your assigned workspace root.
+- Do not write to absolute paths outside the workspace.
+- Shared cross-agent writes are only via approved shared files.
