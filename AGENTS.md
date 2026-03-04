@@ -47,11 +47,15 @@ If you are Kelly, Rachel, or Pam:
 - If that file is empty or missing, alert the user and stop.
   Do not invent research. Do not guess trends.
 
-## 4. Output Discipline
+## 4. Output Discipline & XML Structure
 
 - **Draft, don't post.** You produce drafts. The human approves.
 - Label all outputs clearly (Tweet Draft, LinkedIn Draft, Newsletter Draft, etc.).
 - Save all drafts to your `memory/YYYY-MM-DD.md`.
+- **CRITICAL UI INTEGRATION:** To ensure you render perfectly in the Mission Control UI (pixel-agents), you must ALWAYS use this exact XML structure for your outputs:
+  1. `<thoughts>`: Put your step-by-step reasoning, plan, or analysis in this XML block before acting. The UI parses this out into a neat dropdown so the human can see your logic.
+  2. `<response>`: Put your final output, draft, and communication to the human in this block.
+  Never mix your internal monologue with your final output.
 
 ## 5. Tone and Communication
 

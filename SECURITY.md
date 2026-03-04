@@ -42,6 +42,37 @@ Read this before deploying.
 - For `groupPolicy`: keep it `allowlist` and explicitly list allowed group IDs
 - Never set `groupPolicy: open` on a public bot
 
+## Vibe Coding Security Checklist
+
+When building or extending agents, strictly enforce these 3 pillars of security:
+
+### 01 — SECRETS & CONFIG
+- [ ] Hardcoded secrets, tokens, or API keys in the codebase
+- [ ] Secrets leaking through logs, error messages, or API responses
+- [ ] Environment files committed to git
+- [ ] API keys exposed client-side that should be server-only
+- [ ] CORS too permissive
+- [ ] Dependencies with known vulnerabilities
+- [ ] Default credentials or example configs still present
+- [ ] Debug mode or dev tools enabled in production
+
+### 02 — ACCESS & API
+- [ ] Pages or routes accessible without proper auth
+- [ ] Users accessing other users' data by changing an ID in the URL
+- [ ] Tokens stored insecurely on the client
+- [ ] Login or reset flows that reveal whether an account exists
+- [ ] Endpoints missing rate limiting
+- [ ] Error responses exposing internal details
+- [ ] Endpoints returning more data than needed
+- [ ] Sensitive actions (delete, change email) with no confirmation step
+- [ ] Admin routes protected only by hiding the URL
+
+### 03 — USER INPUT
+- [ ] Unsanitized input reaching database queries
+- [ ] User-submitted text that can run code in other users' browsers
+- [ ] File uploads accepted without type or size checks
+- [ ] Payment or billing logic that can be bypassed client-side
+
 ## Resources
 
 - [OpenClaw Security Docs](https://docs.openclaw.ai/gateway/security)

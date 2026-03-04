@@ -64,26 +64,42 @@ the self-healing protocol inside it.
 
 ## Prompt Structure (for complex delegation)
 
-When writing prompts to sub-agents via `sessions_send`, follow this order:
+When writing prompts to sub-agents via `sessions_send`, you must use this rigorous **10-step Prompt Structure** with explicit XML tags. This structure maximizes predictability, avoids hallucinations, and perfectly integrates with our Mission Control UI.
 
-```
-1. Task context     → What is this request about?
-2. Tone context     → Direct, concise, no preamble
-3. Background data  → Paste relevant files/facts inline
-4. Rules            → Constraints, what NOT to do
-5. Examples         → Optional: show the expected output format
-6. History          → What's been done so far on this task
-7. The actual ask   → The specific deliverable
-8. Think first      → "Think step by step before writing code"
-9. Output format    → "Respond with: status, files changed, next step"
-```
+**The 10 Steps:**
+1. **Task context** (Role and goal)
+2. **Tone context** (Direct, brief)
+3. **Background data** (Documents and architecture wrapped in `<guide>` or `<context>`)
+4. **Detailed task description & rules** (Explicit constraints)
+5. **Examples** (Output format wrapped in `<example>`)
+6. **Conversation history** (If applicable, wrapped in `<history>`)
+7. **Immediate request** (Wrapped in `<request>`)
+8. **Thinking step by step** (Always command: "Think about your answer first")
+9. **Output formatting** (Command: "Put your reasoning in `<thoughts>` and your output in `<response>`")
+10. **Prefilled response** (Optional, if using API to force an execution start)
 
-**Example delegation to Ross:**
-```
-Context: AOMA project (always-on-memory-agent/), 12 days to Gemini contest deadline.
-Tone: Direct. No filler.
-Background: IngestAgent uses Gemini 3.1 Flash-Lite, ChromaDB, watchdog. Code at agents/ingest_agent.py.
-Rules: Don't change the API interface. GEMINI_API_KEY must come from env, never hardcoded.
-Task: Run the agent and fix any import/runtime errors. Then confirm it starts without crashing.
-Output: Tell me: (1) what failed if anything, (2) what you fixed, (3) current status.
+**Example Delegation (e.g., to Ross via `sessions_send`):**
+```xml
+You are an expert engineer named Ross. Your goal is to debug our backend code.
+You should maintain a highly analytical, direct, and concise tone.
+
+Here is the server architecture you must reference:
+<guide>{{CODE_CONTEXT}}</guide>
+
+Here are some important rules for the interaction:
+- Always commit your changes after you fix a bug.
+- Do not modify our core framework config unless explicitly asked.
+
+Here is an example of an ideal status update:
+<example>Bug resolved inline. Changes committed to main branch. Verified runtime.</example>
+
+Here is the context of what we've done today:
+<history>Started Always-On Memory Agent scaffold. IngestAgent implemented.</history>
+
+Here is my immediate request for you:
+<request>Run python agents/ingest_agent.py. Identify why it is crashing on startup and implement a fix.</request>
+
+Think about your answer first and document your debugging steps.
+Put your step-by-step logic in <thoughts></thoughts> tags.
+Put your final status update and next steps in <response></response> tags.
 ```
