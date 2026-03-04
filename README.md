@@ -2,7 +2,9 @@
 
 > A production-ready OpenClaw workspace template for running a 6-agent autonomous AI team that works 24/7 — researching, writing, coding, and delivering — while you sleep.
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![CI](https://github.com/mangeshraut712/autonomous-agent-team/actions/workflows/ci.yml/badge.svg)](https://github.com/mangeshraut712/autonomous-agent-team/actions/workflows/ci.yml)
+[![License](https://img.shields.io/github/license/mangeshraut712/autonomous-agent-team)](LICENSE)
+[![Release](https://img.shields.io/github/v/release/mangeshraut712/autonomous-agent-team)](https://github.com/mangeshraut712/autonomous-agent-team/releases)
 [![OpenClaw](https://img.shields.io/badge/Powered%20by-OpenClaw-red)](https://openclaw.ai)
 [![Telegram](https://img.shields.io/badge/Interface-Telegram-blue)](https://telegram.org)
 
