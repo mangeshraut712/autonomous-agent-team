@@ -1,0 +1,29 @@
+version: "3.9"
+
+services:
+  gateway:
+    image: ghcr.io/openclaw/openclaw:latest
+    container_name: openclaw-gateway
+    restart: unless-stopped
+    ports:
+      - "7462:7462" # Web UI / Gateway
+      - "443:443"   # Tailscale Funnel / HTTPS
+    environment:
+      - OPENCLAW_WORKSPACE=/workspace
+      # Load all API keys from a local .env file
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+      # Telemetry / Observability (Opportunity #8)
+      - OPENCLAW_APM_ENABLED=true
+      - OPENCLAW_LOG_LEVEL=info
+    volumes:
+      # Mount our custom 6-agent workforce configurations
+      - .:/workspace:rw
+      # Maintain persistent SQLite state securely across container restarts
+      - openclaw_data:/root/.openclaw
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+volumes:
+  openclaw_data:

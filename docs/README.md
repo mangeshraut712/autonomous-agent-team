@@ -5,6 +5,7 @@
 - [operations.md](operations.md): where to start (Telegram, dashboard, terminal), background flow, status checks.
 - [telegram-setup.md](telegram-setup.md): secure Telegram configuration, pairing/allowlist, validation.
 - [web-search-providers.md](web-search-providers.md): official OpenClaw web providers + Parallel fallback.
+- [openclaw-under-the-hood.md](openclaw-under-the-hood.md): architecture, memory model, routing, tool safety, and cost/performance runbook.
 
 ## Operator Commands
 
@@ -19,6 +20,7 @@ openclaw status --all
 openclaw gateway probe
 openclaw gateway status
 openclaw channels status --probe
+make drift-audit
 ```
 
 ### Cron

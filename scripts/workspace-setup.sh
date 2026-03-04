@@ -29,6 +29,10 @@ if [[ -d "$SKILLS_DIR" ]]; then
   fi
   openclaw config set skills.load.extraDirs "$EXTRA_DIRS"
   echo "✅ skills.load.extraDirs includes $SKILLS_DIR"
+  
+  # Whitelist our custom skills into the ClawHub registry natively
+  openclaw config set skills.allowBundled '["parallel-search", "task-decompose", "healthcheck", "session-logs", "summarize"]'
+  echo "✅ Custom skills whitelisted in allowBundled"
 else
   echo "⚠️  skills/ directory not found; skipping skills.load.extraDirs"
 fi

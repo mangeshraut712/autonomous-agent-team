@@ -1,34 +1,77 @@
-## Cron Health Check (run on each heartbeat)
+# HEARTBEAT.md — Automated Health Check Checklist
 
-Check if any daily cron jobs have stale lastRunAtMs (>26 hours
-since last run). If stale, trigger them via CLI:
-`openclaw cron run <jobId>`
+*This file is read on every heartbeat cron (default: every 30 minutes).*
+*Monica goes through each item in order and reports issues to Telegram.*
 
-## Jobs to Monitor
+---
 
-| Time | Agent | Job | ID |
-|------|-------|-----|----|
-| 8:01 AM | Dwight | Morning research sweep | 64334029-8651-445c-98e8-dd7c45042a28 |
-| 9:01 AM & 1:01 PM | Kelly | First/midday viral content check | b30ef0eb-fbcd-41a3-b7b5-22855ea33fe5 |
-| 10:01 AM | Ross | Engineering tasks | 8cee5580-04c2-4a93-b620-4bc332b0b279 |
+## What Is the Heartbeat?
 
-## Self-Healing Protocol
+The heartbeat turns your agents from **reactive chatbots** (only respond when you message them) into **proactive workers** (check on things without you asking).
 
-On every heartbeat:
-1. Run `openclaw cron list` to check `lastRunAtMs` for each job above.
-2. If any job hasn't run in >26 hours, run:
-   `openclaw cron run <jobId>`
-3. Log the forced re-run in `memory/YYYY-MM-DD.md` under a "Heartbeat" section.
-
-## Order Matters
-
-Always check **Dwight first** — every other agent (Kelly, Rachel, Pam)
-depends on his intel output. If Dwight is stale, all content agents are blocked.
-
-## Force-Run All Stale Jobs
-
+It's powered by a cron job:
 ```bash
-openclaw cron run 64334029-8651-445c-98e8-dd7c45042a28  # Dwight Morning
-openclaw cron run b30ef0eb-fbcd-41a3-b7b5-22855ea33fe5  # Kelly Viral
-openclaw cron run 8cee5580-04c2-4a93-b620-4bc332b0b279  # Ross Engineering
+# Install the heartbeat cron
+openclaw cron add \
+  --schedule "*/30 8-23 * * *" \
+  --agent main \
+  --prompt "Run the heartbeat checklist in HEARTBEAT.md." \
+  --announce
 ```
+
+---
+
+## Checklist Template
+
+Copy this section and customize for your setup:
+
+---
+
+### 1. Gateway Health
+- Run `curl -s http://127.0.0.1:18789/health` to verify the gateway is responding.
+- If it returns an error: alert user on Telegram with restart instructions.
+
+### 2. Cron Job Status
+Check these jobs haven't gone stale (more than 26 hours since last run):
+
+| Time | Agent | Job Description | Job ID |
+|------|-------|----------------|--------|
+| 8:00 AM | Dwight | Morning research sweep | `[paste job ID here]` |
+| 9:00 AM | Kelly | Content ideas check | `[paste job ID here]` |
+| 10:00 AM | Ross | Engineering task review | `[paste job ID here]` |
+
+Run `openclaw cron list --json` to check `lastRunAtMs`. If stale → trigger manually:
+```bash
+openclaw cron run <jobId>
+```
+
+### 3. Active Project Blockers
+- Check `intel/BLOCKERS.md` — if it exists and has unresolved entries, notify user.
+- Check `intel/PROJECT-PLAN.md` — are any phases stuck `[IN PROGRESS]` for over 48 hours?
+
+### 4. Memory Health
+- Run `openclaw memory status` to check the vector index.
+- If it shows 0 indexed chunks, run `openclaw memory index --force`.
+
+### 5. Self-Healing Protocol
+If any check fails:
+1. Attempt auto-fix (e.g. restart a stuck cron)
+2. Log the incident in `memory/YYYY-MM-DD.md` under a `## Heartbeat` section
+3. If unfixable, alert user on Telegram: "🚨 [Issue] needs your attention."
+
+---
+
+## Example: Production Heartbeat Log Entry
+
+```markdown
+## Heartbeat — 2026-03-05 09:30 IST
+
+✅ Gateway: online
+✅ Cron: Dwight ran 1h ago (ok)
+⚠️ Cron: Kelly hasn't run in 28h — triggered manually (job b30ef0eb)
+✅ Memory: 95 chunks indexed
+```
+
+---
+
+> 💡 **Tip:** The heartbeat is what separates agents that work while you sleep from glorified chatbots. Even a simple checklist with 2-3 items delivers huge value — you'll catch problems before they become crises.

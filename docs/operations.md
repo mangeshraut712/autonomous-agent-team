@@ -15,6 +15,26 @@ This workspace can be operated from four surfaces:
    `openclaw pairing approve telegram <PAIRING_CODE>`
 4. Send a test ping with `make notify`.
 
+## Heartbeat Policy (Token-Safe)
+
+- Heartbeat schedule: every 30 minutes, **08:00–23:00 IST**.
+- Outside this window: quiet mode (`HEARTBEAT_QUIET`).
+- Heavy scanning does **not** run in heartbeat; it runs in isolated cron sessions.
+- Before any compaction/reset, agent must flush learnings to daily memory + `MEMORY.md`.
+
+Install/update default cron set (includes Monica heartbeat):
+
+```bash
+make cron-install
+```
+
+Override heartbeat window via env if needed:
+
+```bash
+# Example: every 20 minutes, 07:00-22:00
+OPENCLAW_HEARTBEAT_CRON="*/20 7-22 * * *" make cron-install
+```
+
 ## Understand Runtime State
 
 Use this sequence:
@@ -46,11 +66,25 @@ openclaw cron list
 openclaw cron runs --id <jobId> --limit 20
 ```
 
-If a job is stale:
+If a job is stale/failed:
 
 ```bash
 openclaw cron run <jobId> --force
 ```
+
+## Drift Audit (Cron Sprawl Guardrail)
+
+When cron count grows, agents can over-optimize infrastructure tasks.
+
+Run manual audit:
+
+```bash
+make drift-audit
+```
+
+- Report output: `intel/DRIFT-AUDIT.md`
+- Default threshold: 50 jobs (`DRIFT_CRON_THRESHOLD` to override)
+- Sends Telegram alert automatically when risk is flagged
 
 ## Workspace Path Safety
 
