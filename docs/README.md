@@ -13,6 +13,7 @@
 ```bash
 ./scripts/test.sh
 ./scripts/status.sh
+./scripts/reset-workspace.sh
 openclaw health
 openclaw status --probe
 ```

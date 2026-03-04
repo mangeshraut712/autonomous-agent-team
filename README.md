@@ -41,6 +41,7 @@ Production-ready OpenClaw workspace for a 6-agent AI team: research, content dra
 │   └── data/
 └── scripts/
     ├── add-cron-jobs.sh
+    ├── reset-workspace.sh
     ├── test.sh
     ├── status.sh
     └── parallel-search.sh

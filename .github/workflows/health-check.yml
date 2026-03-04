@@ -1,0 +1,67 @@
+name: OpenClaw Health Check
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      
+      - name: Validate Markdown Files
+        run: |
+          # Basic sanity checks on core markdown files.
+          failed=0
+          for file in \
+            SOUL.md \
+            AGENTS.md \
+            MEMORY.md \
+            HEARTBEAT.md \
+            agents/dwight/SOUL.md \
+            agents/dwight/AGENTS.md \
+            agents/dwight/MEMORY.md \
+            agents/kelly/SOUL.md \
+            agents/kelly/AGENTS.md \
+            agents/kelly/MEMORY.md \
+            agents/rachel/SOUL.md \
+            agents/rachel/AGENTS.md \
+            agents/ross/SOUL.md \
+            agents/ross/AGENTS.md \
+            agents/pam/SOUL.md \
+            agents/pam/AGENTS.md \
+            scripts/parallel-search.sh
+          do
+            if [ ! -f "$file" ]; then
+              echo "❌ ERROR: Missing required file $file. A symlink or the actual file must exist!"
+              failed=1
+            else
+              echo "✅ $file exists."
+            fi
+          done
+          
+          if [ "$failed" -eq 1 ]; then
+            exit 1
+          fi
+
+      - name: Ensure Shell Scripts are Executable
+        run: |
+          chmod +x scripts/*.sh || true
+
+      - name: Check Environment Syntax
+        run: |
+          if [ -f "scripts/parallel-search.sh" ]; then
+            bash -n scripts/parallel-search.sh
+            echo "✅ parallel-search.sh syntax ok."
+          fi
+          if [ -f "scripts/add-cron-jobs.sh" ]; then
+            bash -n scripts/add-cron-jobs.sh
+            echo "✅ add-cron-jobs.sh syntax ok."
+          fi
+
+      - name: Success
+        run: echo "🎉 Workspace structure and logic passed."
