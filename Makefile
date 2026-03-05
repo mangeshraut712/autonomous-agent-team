@@ -1,14 +1,18 @@
 SHELL := /bin/bash
 .DEFAULT_GOAL := help
 
-.PHONY: help workspace-setup env-sync cron-install status test ready-strict notify notifier-install drift-audit reset-workspace boundary-fix
+.PHONY: help workspace-setup env-sync cron-install cron-sdlc-upgrade status contest-status sdlc-guard gitlab-live-proof test ready-strict notify notifier-install drift-audit reset-workspace boundary-fix
 
 help:
 	@echo "autonomous-agent-team commands"
 	@echo "  make workspace-setup   - Apply OpenClaw workspace config"
 	@echo "  make env-sync          - Sync project .env keys into ~/.openclaw/.env"
 	@echo "  make cron-install      - Register 7 default cron jobs (incl. heartbeat)"
+	@echo "  make cron-sdlc-upgrade - Patch active cron prompts for SDLC execution"
 	@echo "  make status            - Show OpenClaw status snapshot"
+	@echo "  make contest-status    - Show Gemini + GitLab contest readiness snapshot"
+	@echo "  make sdlc-guard        - Run SDLC gate for a target project"
+	@echo "  make gitlab-live-proof - Run credentialed Duo+GitLab proof and notify"
 	@echo "  make test              - Run workspace health checks"
 	@echo "  make boundary-fix      - Repair/validate root workspace boundary"
 	@echo "  make ready-strict      - Run strict production readiness checks"
@@ -26,8 +30,21 @@ env-sync:
 cron-install:
 	@bash scripts/add-cron-jobs.sh
 
+cron-sdlc-upgrade:
+	@bash scripts/upgrade-sdlc-cron.sh
+
 status:
 	@bash scripts/status.sh
+
+contest-status:
+	@bash scripts/contest-status.sh
+
+# Usage: make sdlc-guard PROJECT=projects/gitlab-ai-hackathon-2026
+sdlc-guard:
+	@bash scripts/sdlc-guard.sh "$(or $(PROJECT),projects/gitlab-ai-hackathon-2026)"
+
+gitlab-live-proof:
+	@bash scripts/gitlab-live-proof.sh
 
 test:
 	@bash scripts/test.sh

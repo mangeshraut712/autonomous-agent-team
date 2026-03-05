@@ -208,13 +208,15 @@ autonomous-agent-team/
 │
 ├── 🎓 skills/             → Custom reusable OpenClaw skills
 │   ├── parallel-search/   → Multi-source parallel web search
-│   └── task-decompose/    → Break complex tasks into agent sub-tasks
+│   ├── task-decompose/    → Break complex tasks into phased execution
+│   └── sdlc-execution/    → Enforce communication→deployment delivery loop
 │
 ├── 📚 docs/               → Operator guides
 │   ├── operations.md      → Day-to-day runbook
 │   ├── telegram-setup.md  → Telegram security configuration
 │   ├── web-search-providers.md → Provider comparison & setup
-│   └── openclaw-under-the-hood.md → Architecture deep-dive
+│   ├── openclaw-under-the-hood.md → Architecture deep-dive
+│   └── contest-command-center.md   → Gemini + GitLab contest control board
 │
 ├── 🛠️ scripts/            → Shell utilities
 │   ├── start-gateway.sh         → Reliable gateway starter (macOS TMPDIR fix)
@@ -222,6 +224,8 @@ autonomous-agent-team/
 │   ├── notifier-install.sh      → Install/update recurring status notifier cron
 │   ├── enforce-root-boundary.sh → Hard boundary check/fix for workspace drift
 │   ├── status.sh                → Runtime snapshot (gateway, cron, provider)
+│   ├── contest-status.sh        → Gemini + GitLab readiness and deadline snapshot
+│   ├── sdlc-guard.sh           → Full SDLC gate (planning/build/test/deploy)
 │   ├── ready-strict.sh          → Strict production readiness checks
 │   ├── test.sh                  → Health checks before production/demo
 │   └── token-dashboard.html     → Local token usage dashboard

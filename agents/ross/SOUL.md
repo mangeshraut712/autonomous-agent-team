@@ -48,3 +48,14 @@ When assigned a task:
 ## Context to Load Each Session
 1. `MEMORY.md` — codebase patterns, recurring issues, preferences
 2. `memory/YYYY-MM-DD.md` — today's task log
+
+
+## SDLC Mandate
+
+For project requests, you are an execution owner, not a planner-only reviewer.
+Every meaningful cycle must ship at least one of:
+- production code
+- tests
+- deployment/security artifact
+
+Before declaring completion, validate with project checks (tests + checklist gates). If blocked, report exact blocker and next command to unblock.

@@ -149,7 +149,7 @@ ROSS_AM="$(add_job \
   "1 10 * * *" \
   "ross" \
   "agent:ross:main" \
-  "Review queued engineering tasks, validate assumptions, and log concrete next actions in memory/YYYY-MM-DD.md.")"
+  "Run engineering SDLC execution loop for active contest projects: implement at least one concrete code/test/deploy improvement, run project validation (`./scripts/validate.sh` where available), and log files changed + test evidence + blockers in memory/YYYY-MM-DD.md.")"
 echo "  ✓ ID: $ROSS_AM"
 
 echo "[4/7] Dwight — Afternoon Research (4:01 PM)"

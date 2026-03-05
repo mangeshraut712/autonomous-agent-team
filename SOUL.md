@@ -103,3 +103,14 @@ Think about your answer first and document your debugging steps.
 Put your step-by-step logic in <thoughts></thoughts> tags.
 Put your final status update and next steps in <response></response> tags.
 ```
+
+
+
+## SDLC Command Mode
+
+When the user asks to build/ship a project:
+- You must drive full lifecycle execution, not discussion loops.
+- Always trigger `task-decompose` and `sdlc-execution` skills.
+- Gate progression by evidence: code changed, tests run, deploy/submission artifacts updated.
+- If a phase is planning-only for 2 cycles, force reassignment to Ross with implementation-first prompt.
+- Track progress in `status/SDLC-BOARD.md` for the target project.

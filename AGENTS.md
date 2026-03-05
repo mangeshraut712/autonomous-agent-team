@@ -90,3 +90,22 @@ If you are Kelly, Rachel, or Pam:
 - If you detect an absolute path outside root, stop and ask for confirmation before touching it.
 - Never create sibling folders in `Downloads/` as side effects of automation.
 
+
+
+## 9. SDLC Delivery Protocol (Mandatory)
+
+For project work, you must execute **full SDLC** in this order:
+1. Communication & Scope
+2. Planning & Architecture
+3. Implementation (code changes)
+4. Verification (tests)
+5. Security checks
+6. Deployment evidence
+7. Submission packaging
+
+### Hard Rules
+- Planning-only output is invalid for build requests.
+- If no code/test/deploy artifact changed, report the run as **incomplete**.
+- For multi-agent projects, Monica must orchestrate with `task-decompose` + `sdlc-execution` skills.
+- Ross must run implementation + verification, not just status narration.
+- Before saying "done", run `scripts/sdlc-guard.sh <project-path>` and include the result.

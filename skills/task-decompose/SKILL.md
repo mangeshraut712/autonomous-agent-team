@@ -1,31 +1,62 @@
 ---
 name: task-decompose
-description: Skill for the Chief of Staff (Monica) to formally break down a complex human request into a multi-agent orchestrated plan. 
+description: Chief-of-Staff orchestration skill for end-to-end SDLC delivery. Use this when a request is project-scale and needs multi-agent execution from requirements to deployment evidence.
 ---
 
-# Task Decomposition & Swarm Orchestration Skill
+# Task Decomposition & SDLC Orchestration Skill
 
-When the user gives a massive project goal (like "build a hackathon project" or "launch a product"), you (Monica) must not attempt to do the work yourself or ping agents randomly.
+When a user asks to build a real project, you must orchestrate full SDLC delivery.
+Planning-only output is invalid.
 
-You must formally use this decomposition workflow:
+## Required Output Files (Project Root)
 
-## 1. Create a `PROJECT-PLAN.md`
-In the shared `intel/` directory, immediately draft a Markdown file outlining the sequence of execution.
-It must contain:
-1. **The Objective**
-2. **Phase 1: Research (Assigned to Dwight)** - What specific facts must be fetched before anything else can start?
-3. **Phase 2: Action & Engineering (Assigned to Ross)** - What code or specs need to be written based on Phase 1?
-4. **Phase 3: Marketing & Polish (Assigned to Kelly, Rachel, Pam)** - What outputs are required?
+Create/update these artifacts for every project cycle:
 
-## 2. Sequential Dispatch (The `sessions_send` loop)
-Do NOT send all commands at once. 
-1. Call `sessions_send` to Dwight with Phase 1. 
-2. Suspend your workflow and ask the user to wait until Dwight reports back. 
-3. Only once Dwight updates `intel/`, call `sessions_send` to Ross with Phase 2, passing the file path.
-4. Continue sequentially.
+1. `status/SDLC-BOARD.md` — source of truth for stage status
+2. `deliverables/TECH-SPEC.md` — architecture and interfaces
+3. `deliverables/IMPLEMENTATION-PLAN.md` — milestones and acceptance tests
+4. `deliverables/SUBMISSION-NARRATIVE.md` — judge-ready story and demo flow
 
-## 3. Conflict Resolution
-If an agent (e.g., Ross) pushes back and says Dwight's research is insufficient, you must act as the router:
-1. Contact Dwight via `sessions_send` with Ross's feedback.
-2. Demand an update. 
-3. **Never attempt to resolve the conflict by guessing.** You are the router, not the executor!
+## SDLC Phases (Must Run In Order)
+
+### Phase 0: Communication & Scope (Monica)
+- Clarify objective, deadline, judging criteria, constraints.
+- Write success criteria in `status/SDLC-BOARD.md`.
+
+### Phase 1: Discovery & Research (Dwight)
+- Collect source-verified requirements, benchmarks, risks.
+- Write findings to `deliverables/RESEARCH-BRIEF.md`.
+
+### Phase 2: Design (Monica + Ross)
+- Convert requirements into architecture, interfaces, and acceptance tests.
+- Update `deliverables/TECH-SPEC.md`.
+
+### Phase 3: Build (Ross)
+- Implement code in project runtime paths.
+- Add/upgrade tests for every major change.
+- No stage completion without code changes.
+
+### Phase 4: Verification (Ross)
+- Run tests/lint/security checks.
+- Record evidence in `status/` (commands + outputs).
+
+### Phase 5: Packaging (Pam + Monica)
+- Update README, checklist, submission narrative, and reproducible runbook.
+
+### Phase 6: Demo & Deploy Evidence (Ross + Pam)
+- Capture deploy proof and demo checklist status.
+- Ensure required URLs/placeholders are closed before submission.
+
+## Dispatch Rules (`sessions_send`)
+
+1. Dispatch one phase owner at a time with concrete file paths.
+2. Require owner to return exact artifacts changed and test commands run.
+3. If a phase fails validation, do not move forward.
+4. Route blockers explicitly back to owner with remediation request.
+
+## Completion Criteria
+
+Do not mark complete unless:
+- Code exists and is test-validated.
+- Security/deploy evidence exists.
+- Submission checklist has no unresolved mandatory items.

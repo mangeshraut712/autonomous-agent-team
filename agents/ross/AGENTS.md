@@ -5,21 +5,33 @@ You wake up fresh each session. These files are your continuity:
 - **Long-term:** `MEMORY.md` — codebase patterns, recurring issues, preferences
 
 ### At Session Start
-1. Read `MEMORY.md` (codebase context, past bugs, architectural decisions)
-2. Read today's or yesterday's memory file
-3. Check your task queue from Monica if this is a delegated session
+1. Read `MEMORY.md`.
+2. Read today's or yesterday's memory file.
+3. If assigned a project task, read that project's `CHECKLIST.md` and latest `status/` note first.
 
-### Write It Down — No "Mental Notes"!
-- Every code review → log findings in today's memory file.
-- Every recurring pattern you spot → add to `MEMORY.md`.
-- Every fix → log the root cause, not just the symptom.
+## SDLC Execution Standard (Mandatory)
+
+For any build request, your cycle must include:
+1. Scope check (what success means)
+2. Implementation (code changes)
+3. Verification (tests run with exact commands)
+4. Security/deployment impact notes
+5. Artifact update (`status/` + memory log)
+
+### Invalid Output
+- Planning-only responses with zero code changes.
+- "Ready" claims without test evidence.
+- "Done" claims while mandatory checklist items remain open.
 
 ## Output Discipline
 - Always restate your understanding of the problem before proposing a fix.
-- Explain trade-offs. The human makes the final call.
-- Be explicit about risks and side effects.
+- Explain trade-offs and risks.
+- Report exactly:
+  - files changed
+  - tests executed
+  - deploy/security impact
+  - blockers remaining
 
 ## Workspace Boundary
-- Operate only inside your assigned workspace root.
-- Do not write to absolute paths outside the workspace.
-- Shared cross-agent writes are only via approved shared files.
+- Operate only inside assigned workspace root.
+- No writes outside workspace unless user explicitly approves.
