@@ -1,7 +1,7 @@
 SHELL := /bin/bash
 .DEFAULT_GOAL := help
 
-.PHONY: help workspace-setup env-sync cron-install cron-sdlc-upgrade status contest-status sdlc-guard gitlab-live-proof test ready-strict notify notifier-install drift-audit reset-workspace boundary-fix
+.PHONY: help workspace-setup env-sync cron-install cron-sdlc-upgrade status contest-status sdlc-guard gitlab-live-proof deploy-docker cleanup-root test ready-strict notify notifier-install drift-audit reset-workspace boundary-fix
 
 help:
 	@echo "autonomous-agent-team commands"
@@ -13,6 +13,8 @@ help:
 	@echo "  make contest-status    - Show Gemini + GitLab contest readiness snapshot"
 	@echo "  make sdlc-guard        - Run SDLC gate for a target project"
 	@echo "  make gitlab-live-proof - Run credentialed Duo+GitLab proof and notify"
+	@echo "  make deploy-docker     - Start OpenClaw with docker-compose"
+	@echo "  make cleanup-root      - Clean .DS_Store and archive local noise dirs"
 	@echo "  make test              - Run workspace health checks"
 	@echo "  make boundary-fix      - Repair/validate root workspace boundary"
 	@echo "  make ready-strict      - Run strict production readiness checks"
@@ -45,6 +47,12 @@ sdlc-guard:
 
 gitlab-live-proof:
 	@bash scripts/gitlab-live-proof.sh
+
+deploy-docker:
+	@bash scripts/deploy-docker.sh
+
+cleanup-root:
+	@bash scripts/cleanup-root.sh --archive-local-noise
 
 test:
 	@bash scripts/test.sh

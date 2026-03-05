@@ -131,6 +131,13 @@ make boundary-fix
 make ready-strict
 ```
 
+
+## 🚀 Deployment Paths
+
+- Native local gateway: `bash scripts/start-gateway.sh`
+- Docker compose: `make deploy-docker`
+- Full deployment runbook: [docs/deployment.md](docs/deployment.md)
+
 ## 🖥️ Dashboards
 
 Use these interfaces to monitor and operate the system:
@@ -226,6 +233,8 @@ autonomous-agent-team/
 │   ├── status.sh                → Runtime snapshot (gateway, cron, provider)
 │   ├── contest-status.sh        → Gemini + GitLab readiness and deadline snapshot
 │   ├── sdlc-guard.sh           → Full SDLC gate (planning/build/test/deploy)
+│   ├── cleanup-root.sh         → Archive local noise and clean root metadata
+│   ├── deploy-docker.sh        → Launch OpenClaw via docker-compose
 │   ├── ready-strict.sh          → Strict production readiness checks
 │   ├── test.sh                  → Health checks before production/demo
 │   └── token-dashboard.html     → Local token usage dashboard

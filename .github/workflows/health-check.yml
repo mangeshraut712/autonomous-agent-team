@@ -30,6 +30,7 @@ jobs:
             docs/operations.md
             docs/telegram-setup.md
             docs/web-search-providers.md
+            docs/deployment.md
             scripts/add-cron-jobs.sh
             scripts/status.sh
             scripts/test.sh
@@ -39,6 +40,8 @@ jobs:
             scripts/sync-openclaw-env.sh
             scripts/workspace-setup.sh
             scripts/parallel-search.sh
+            scripts/cleanup-root.sh
+            scripts/deploy-docker.sh
           )
 
           for file in "${required[@]}"; do

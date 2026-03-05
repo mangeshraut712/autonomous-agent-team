@@ -3,6 +3,7 @@
 ## Core Guides
 
 - [operations.md](operations.md): where to start (Telegram, dashboard, terminal), background flow, status checks.
+- [deployment.md](deployment.md): local native, Docker, and contest deploy paths.
 - [telegram-setup.md](telegram-setup.md): secure Telegram configuration, pairing/allowlist, validation.
 - [web-search-providers.md](web-search-providers.md): official OpenClaw web providers + Parallel fallback.
 - [openclaw-under-the-hood.md](openclaw-under-the-hood.md): architecture, memory model, routing, tool safety, and cost/performance runbook.
@@ -18,6 +19,7 @@ make test
 make ready-strict
 make status
 make contest-status
+make deploy-docker
 make sdlc-guard PROJECT=projects/gitlab-ai-hackathon-2026
 make cron-sdlc-upgrade
 openclaw status
@@ -26,6 +28,7 @@ openclaw gateway probe
 openclaw gateway status
 openclaw channels status --probe
 make drift-audit
+make cleanup-root
 ```
 
 ### Cron
