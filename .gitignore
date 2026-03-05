@@ -60,3 +60,4 @@ scripts/hackathon-status.sh
 # MEMORY.md    → tracked as fill-in-blank template
 # TOOLS.md     → tracked as fill-in-blank template
 # HEARTBEAT.md → tracked as fill-in-blank template
+always-on-memory-agent/
