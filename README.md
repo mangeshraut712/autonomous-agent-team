@@ -492,3 +492,20 @@ MIT — See [LICENSE](LICENSE)
 ---
 
 _Built with [OpenClaw](https://openclaw.ai) — the open-source autonomous agent framework._
+
+---
+
+<!-- codex:project-diagram:start -->
+
+## Project Diagram
+
+```mermaid
+flowchart LR
+    A["Inputs"] --> B["Coordinator"]
+    B --> C["Agents / Tools"]
+    C --> D["Outputs"]
+```
+
+_Agent orchestration path from input through tools to final output._
+
+<!-- codex:project-diagram:end -->
