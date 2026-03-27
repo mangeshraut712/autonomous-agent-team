@@ -9,4 +9,4 @@ langchain-openai>=0.3,<0.4
 structlog>=24.1,<25.0
 
 # Type hints backport (for Python 3.9 compat)
-typing-extensions>=4.12
+typing-extensions>=4.12,<5.0

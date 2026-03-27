@@ -7,7 +7,7 @@
 [![LangGraph](https://img.shields.io/badge/orchestration-LangGraph-orange)](langgraph/)
 [![CrewAI](https://img.shields.io/badge/orchestration-CrewAI-green)](crewai/)
 [![Python](https://img.shields.io/badge/python-3.11+-blue)](https://python.org)
-[![Model](https://img.shields.io/badge/default%20model-Configurable%20(via%20.env)-orange)](.env.example)
+[![Model](<https://img.shields.io/badge/default%20model-Configurable%20(via%20.env)-orange>)](.env.example)
 
 ---
 
@@ -15,15 +15,15 @@
 
 This template includes production-grade multi-agent orchestration in **two frameworks**:
 
-| Feature | LangGraph | CrewAI |
-|---------|-----------|--------|
-| Parallel agent execution | ✅ StateGraph conditional edges | ✅ Hierarchical process |
-| Streaming output | ✅ `astream()` per-node | ✅ Event callbacks |
-| Human-in-the-loop | ✅ Native `interrupt()` | ✅ Guardrails/callbacks |
-| Error handling & retry | ✅ Exponential backoff | ✅ Built-in error recovery |
-| Structured logging | ✅ `structlog` | ✅ `structlog` |
-| State management | ✅ Custom `AgentState` dataclass | ✅ Context sharing |
-| CLI interface | ✅ `--stream` / `--hitl` flags | ✅ `--hierarchical` flag |
+| Feature                  | LangGraph                        | CrewAI                     |
+| ------------------------ | -------------------------------- | -------------------------- |
+| Parallel agent execution | ✅ StateGraph conditional edges  | ✅ Hierarchical process    |
+| Streaming output         | ✅ `astream()` per-node          | ✅ Event callbacks         |
+| Human-in-the-loop        | ✅ Native `interrupt()`          | ✅ Guardrails/callbacks    |
+| Error handling & retry   | ✅ Exponential backoff           | ✅ Built-in error recovery |
+| Structured logging       | ✅ `structlog`                   | ✅ `structlog`             |
+| State management         | ✅ Custom `AgentState` dataclass | ✅ Context sharing         |
+| CLI interface            | ✅ `--stream` / `--hitl` flags   | ✅ `--hierarchical` flag   |
 
 **Why two frameworks?** Portfolio versatility. LangGraph shows you can build complex, custom orchestration graphs. CrewAI shows you can ship fast with higher-level abstractions. Employers in 2026 want to see both.
 
@@ -48,14 +48,14 @@ This repo is the **fully configured, battle-tested version**. It implements ever
 
 ## 👥 The 6-Agent Team
 
-| Agent | Role | Speciality |
-|-------|------|-----------|
-| 🎯 **Monica** | Chief of Staff | Orchestrates the team, routes tasks, manages cross-agent comms |
-| 🔍 **Dwight** | Intel & Research | Web research, competitive analysis, writing to `intel/` |
-| 👩‍💻 **Ross** | Engineering | Code, scripts, APIs, technical implementation |
-| 📱 **Kelly** | Social Media | Twitter/X threads, viral content, trend analysis |
-| 💼 **Rachel** | LinkedIn & PR | Professional content, networking posts |
-| ✍️ **Pam** | Narrative & Submissions | Blog posts, Devpost/hackathon narratives, documentation |
+| Agent         | Role                    | Speciality                                                     |
+| ------------- | ----------------------- | -------------------------------------------------------------- |
+| 🎯 **Monica** | Chief of Staff          | Orchestrates the team, routes tasks, manages cross-agent comms |
+| 🔍 **Dwight** | Intel & Research        | Web research, competitive analysis, writing to `intel/`        |
+| 👩‍💻 **Ross**   | Engineering             | Code, scripts, APIs, technical implementation                  |
+| 📱 **Kelly**  | Social Media            | Twitter/X threads, viral content, trend analysis               |
+| 💼 **Rachel** | LinkedIn & PR           | Professional content, networking posts                         |
+| ✍️ **Pam**    | Narrative & Submissions | Blog posts, Devpost/hackathon narratives, documentation        |
 
 **How they talk to each other:** Monica receives your Telegram message → decomposes the task → calls each agent directly using `sessions_send` → collects results → reports back. No manual switching, no copy-pasting between chats.
 
@@ -82,6 +82,7 @@ cp .env.example .env
 ```
 
 Edit `.env` with your keys:
+
 ```bash
 # Required
 TELEGRAM_BOT_TOKEN=your_bot_token    # From @BotFather
@@ -104,6 +105,7 @@ OPENCLAW_CRON_MODEL=openai-codex/gpt-5.1-codex-mini
 ```bash
 openclaw configure
 ```
+
 Select your model provider, set workspace to this repo's directory.
 
 ### 4. Personalize Your Workspace
@@ -152,7 +154,6 @@ make boundary-fix
 make ready-strict
 ```
 
-
 ## 🚀 Deployment Paths
 
 - Native local gateway: `bash scripts/start-gateway.sh`
@@ -182,6 +183,7 @@ open scripts/token-dashboard.html
 This is the #1 thing most OpenClaw users get wrong.
 
 ### Level 1: Bootstrap Memory (Every Request)
+
 These files are **injected into context before every single LLM call**:
 
 ```
@@ -196,6 +198,7 @@ memory/YYYY-MM-DD.md → Today's running log
 **Value:** The agent "knows you" from message #1, zero re-explaining.
 
 ### Level 2: Semantic Search Memory (On Demand)
+
 These files are **vector-indexed** and only retrieved when relevant:
 
 ```
@@ -207,6 +210,7 @@ memory/*.md   → Daily logs (hundreds of them, searchable)
 **Value:** "Where do we usually deploy?" → Agent finds it from 3 months ago.
 
 **Strategy:**
+
 - Bootstrap = critical things needed every message (identity, rules, today's context)
 - Semantic = everything that should survive and be findable but not loaded every time
 
@@ -292,6 +296,7 @@ autonomous-agent-team/
 This repo includes **two standalone orchestration implementations** of the same 6-agent team:
 
 ### LangGraph (`langgraph/`)
+
 Graph-based orchestration with `StateGraph`, conditional routing, streaming, and human-in-the-loop interrupts. Best for complex custom flows.
 
 ```bash
@@ -301,6 +306,7 @@ python -m langgraph.orchestrator --stream --hitl "Write a blog post about our pr
 ```
 
 ### CrewAI (`crewai/`)
+
 Crew-based orchestration with role-defined agents and task delegation. Best for rapid prototyping and team-style workflows.
 
 ```bash
@@ -309,12 +315,12 @@ python -m crewai.crew "Research agentic AI trends and draft a Twitter thread"
 python -m crewai.crew --hierarchical "Full product launch strategy"
 ```
 
-| | LangGraph | CrewAI |
-|---|-----------|--------|
-| **Paradigm** | Graph (nodes + edges) | Crew (agents + tasks) |
-| **Parallelism** | Native fan-out | Sequential / hierarchical delegation |
-| **HITL** | `interrupt()` | Callbacks |
-| **Learning Curve** | Steeper | Gentler |
+|                    | LangGraph             | CrewAI                               |
+| ------------------ | --------------------- | ------------------------------------ |
+| **Paradigm**       | Graph (nodes + edges) | Crew (agents + tasks)                |
+| **Parallelism**    | Native fan-out        | Sequential / hierarchical delegation |
+| **HITL**           | `interrupt()`         | Callbacks                            |
+| **Learning Curve** | Steeper               | Gentler                              |
 
 See [langgraph/README.md](langgraph/README.md) and [crewai/README.md](crewai/README.md) for full architecture docs.
 
@@ -374,13 +380,13 @@ Key settings this template sets up:
 
 ### The 5 Critical Settings (From the OpenClaw Architecture Article)
 
-| Setting | ❌ Wrong Default | ✅ This Template | Why It Matters |
-|---------|-----------------|-----------------|----------------|
-| `session.dmScope` | `main` | `per-channel-peer` | Prevents conversation bleeding between users |
-| `agents.defaults.sandbox.mode` | `off` | `non-main` | Sandboxes sub-agents, prevents shell access |
-| Workspace files | Empty | Fully filled | Agents wake up with context, not blank slate |
-| Compaction strategy | None | `safeguard` | Prevents losing decisions during long sessions |
-| Gateway bind | Could be exposed | `loopback` | Never exposes port 18789 to internet |
+| Setting                        | ❌ Wrong Default | ✅ This Template   | Why It Matters                                 |
+| ------------------------------ | ---------------- | ------------------ | ---------------------------------------------- |
+| `session.dmScope`              | `main`           | `per-channel-peer` | Prevents conversation bleeding between users   |
+| `agents.defaults.sandbox.mode` | `off`            | `non-main`         | Sandboxes sub-agents, prevents shell access    |
+| Workspace files                | Empty            | Fully filled       | Agents wake up with context, not blank slate   |
+| Compaction strategy            | None             | `safeguard`        | Prevents losing decisions during long sessions |
+| Gateway bind                   | Could be exposed | `loopback`         | Never exposes port 18789 to internet           |
 
 ---
 
@@ -458,18 +464,19 @@ openclaw status --all
 
 ## 📚 Documentation
 
-| Guide | What It Covers |
-|-------|---------------|
-| [docs/operations.md](docs/operations.md) | Day-to-day operator runbook |
-| [docs/telegram-setup.md](docs/telegram-setup.md) | Telegram pairing, allowlists, security |
-| [docs/web-search-providers.md](docs/web-search-providers.md) | Kimi, Brave, Perplexity, Grok setup |
-| [docs/openclaw-under-the-hood.md](docs/openclaw-under-the-hood.md) | Full architecture deep-dive |
+| Guide                                                              | What It Covers                         |
+| ------------------------------------------------------------------ | -------------------------------------- |
+| [docs/operations.md](docs/operations.md)                           | Day-to-day operator runbook            |
+| [docs/telegram-setup.md](docs/telegram-setup.md)                   | Telegram pairing, allowlists, security |
+| [docs/web-search-providers.md](docs/web-search-providers.md)       | Kimi, Brave, Perplexity, Grok setup    |
+| [docs/openclaw-under-the-hood.md](docs/openclaw-under-the-hood.md) | Full architecture deep-dive            |
 
 ---
 
 ## 🤝 Contributing
 
 PRs welcome! This template should stay generic and educational. Please:
+
 - Keep all agent workspace files as templates (no personal info)
 - Add any new skills to `skills/` with a proper `SKILL.md`
 - Document new scripts in `TOOLS.md` template
@@ -484,4 +491,4 @@ MIT — See [LICENSE](LICENSE)
 
 ---
 
-*Built with [OpenClaw](https://openclaw.ai) — the open-source autonomous agent framework.*
+_Built with [OpenClaw](https://openclaw.ai) — the open-source autonomous agent framework._

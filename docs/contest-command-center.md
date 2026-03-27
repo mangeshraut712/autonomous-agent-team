@@ -7,6 +7,7 @@ This document converts contest rules into execution gates for the two active pro
 ## Active Contests
 
 ### 1) Gemini Live Agent Challenge
+
 - Deadline: **2026-03-16 20:00 EDT**
 - Project path: `/Users/mangeshraut/Downloads/Gemini Live Agent Challenge`
 - Checklist source: `DEVPOST_SUBMISSION_CHECKLIST.md`
@@ -15,6 +16,7 @@ This document converts contest rules into execution gates for the two active pro
 - Critical missing artifacts: final demo URL, Cloud Run URL/proof, published article URL
 
 ### 2) GitLab AI Hackathon
+
 - Deadline: **2026-03-25 14:00 EDT**
 - Project path: `/Users/mangeshraut/Downloads/AI Agent/projects/gitlab-ai-hackathon-2026`
 - Checklist source: `CHECKLIST.md`

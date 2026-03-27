@@ -1,6 +1,6 @@
 # USER.md — Mangesh Raut
 
-*Operational context for this workspace only. Updated 2026-03-05 (IST).*
+_Operational context for this workspace only. Updated 2026-03-05 (IST)._
 
 ---
 

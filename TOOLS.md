@@ -1,7 +1,7 @@
 # TOOLS.md — Local Environment Cheat Sheet
 
-*This file gives the agent a map of your specific setup — paths, scripts, services.*
-*It's read at session start so the agent knows your environment without guessing.*
+_This file gives the agent a map of your specific setup — paths, scripts, services._
+_It's read at session start so the agent knows your environment without guessing._
 
 ---
 
@@ -23,14 +23,14 @@ Replace each section below with real values for your machine/project.
 
 ## Scripts Available
 
-| Script | Purpose |
-|--------|---------|
-| `scripts/start-gateway.sh` | Start OpenClaw gateway (includes macOS TMPDIR fix) |
-| `scripts/add-cron-jobs.sh` | Install scheduled cron jobs for all agents |
-| `scripts/workspace-setup.sh` | Register workspace path and custom skills |
-| `scripts/reset-workspace.sh` | Clear daily memory for a fresh test run |
-| `scripts/test.sh` | Full workspace health check — run before demos |
-| `scripts/status.sh` | Print agent and cron status summary |
+| Script                       | Purpose                                            |
+| ---------------------------- | -------------------------------------------------- |
+| `scripts/start-gateway.sh`   | Start OpenClaw gateway (includes macOS TMPDIR fix) |
+| `scripts/add-cron-jobs.sh`   | Install scheduled cron jobs for all agents         |
+| `scripts/workspace-setup.sh` | Register workspace path and custom skills          |
+| `scripts/reset-workspace.sh` | Clear daily memory for a fresh test run            |
+| `scripts/test.sh`            | Full workspace health check — run before demos     |
+| `scripts/status.sh`          | Print agent and cron status summary                |
 
 ## Key CLI Commands
 
@@ -57,6 +57,7 @@ openclaw cron run <jobId>                   # Run a specific job now
 
 ```markdown
 # Fill in your actual API endpoints and services:
+
 - **Telegram Bot:** [Your bot username]
 - **Primary AI Model:** [e.g. anthropic/claude-3-5-sonnet-20241022]
 - **Web Search Provider:** [e.g. Kimi, Brave, Perplexity]
@@ -66,11 +67,13 @@ openclaw cron run <jobId>                   # Run a specific job now
 ## Platform-Specific Notes
 
 ### macOS (Sequoia+)
+
 - **Gateway startup quirk:** Prefix with `TMPDIR=/tmp` — macOS blocks default temp dir via `com.apple.provenance` extended attribute.
 - **Keep Mac awake overnight:** Run `caffeinate -d &` before leaving agents to work.
 - **Permission fix:** If OpenClaw can't write to `~/.openclaw`, run: `sudo chown -R $USER ~/.openclaw`
 
 ### Linux / Server
+
 - **Gateway as service:** `openclaw gateway install && openclaw gateway start`
 - **Docker deployment:** See `docker-compose.yml` for one-command deploy
 

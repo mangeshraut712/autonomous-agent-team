@@ -4,14 +4,14 @@ A standalone [LangGraph](https://github.com/langchain-ai/langgraph) implementati
 
 ## What's New in the 2026 Edition
 
-| Feature | Details |
-|---------|---------|
-| **Streaming** | `astream` yields intermediate state updates as agents complete |
-| **Human-in-the-Loop** | `interrupt()` gates pause execution for human review before final synthesis |
-| **Retry with Backoff** | All LLM calls use `_call_with_retry()` — 3 attempts, exponential backoff |
-| **Per-Agent Error Handling** | Failed agents log errors and return gracefully, not crash the graph |
-| **Structured Logging** | `structlog` throughout — JSON logs in production, pretty in dev |
-| **Pinned Dependencies** | Semver ranges with upper bounds for reproducible builds |
+| Feature                      | Details                                                                     |
+| ---------------------------- | --------------------------------------------------------------------------- |
+| **Streaming**                | `astream` yields intermediate state updates as agents complete              |
+| **Human-in-the-Loop**        | `interrupt()` gates pause execution for human review before final synthesis |
+| **Retry with Backoff**       | All LLM calls use `_call_with_retry()` — 3 attempts, exponential backoff    |
+| **Per-Agent Error Handling** | Failed agents log errors and return gracefully, not crash the graph         |
+| **Structured Logging**       | `structlog` throughout — JSON logs in production, pretty in dev             |
+| **Pinned Dependencies**      | Semver ranges with upper bounds for reproducible builds                     |
 
 ## Architecture
 
@@ -44,26 +44,26 @@ User Input
 
 ## Key Concepts Demonstrated
 
-| Concept | How It's Used |
-|---------|---------------|
-| **StateGraph** | Shared `AgentState` dataclass flows through all nodes |
-| **Conditional Edges** | Orchestrator routes to specific agents based on task analysis |
-| **Parallel Fan-out** | Multiple agents execute simultaneously via `add_conditional_edges` |
-| **Aggregation** | Results converge into a single coherent output |
-| **Agent Specialization** | Each agent has a distinct system prompt and role |
-| **HITL Interrupts** | `langgraph.interrupt()` for human approval gates |
-| **Streaming** | `astream()` yields per-node updates in real-time |
-| **Retry Logic** | Exponential backoff on all LLM calls |
+| Concept                  | How It's Used                                                      |
+| ------------------------ | ------------------------------------------------------------------ |
+| **StateGraph**           | Shared `AgentState` dataclass flows through all nodes              |
+| **Conditional Edges**    | Orchestrator routes to specific agents based on task analysis      |
+| **Parallel Fan-out**     | Multiple agents execute simultaneously via `add_conditional_edges` |
+| **Aggregation**          | Results converge into a single coherent output                     |
+| **Agent Specialization** | Each agent has a distinct system prompt and role                   |
+| **HITL Interrupts**      | `langgraph.interrupt()` for human approval gates                   |
+| **Streaming**            | `astream()` yields per-node updates in real-time                   |
+| **Retry Logic**          | Exponential backoff on all LLM calls                               |
 
 ## Agents
 
-| Agent | Node | Speciality |
-|-------|------|-----------|
-| 🎯 Monica | `orchestrator` / `aggregator` | Routing + synthesis |
-| 🔍 Dwight | `research` | Web research, analysis |
-| 👩‍💻 Ross | `engineering` | Code, APIs, architecture |
-| 📱 Kelly | `social` | Twitter/X, viral content |
-| ✍️ Pam | `writing` | Blog posts, documentation |
+| Agent     | Node                          | Speciality                |
+| --------- | ----------------------------- | ------------------------- |
+| 🎯 Monica | `orchestrator` / `aggregator` | Routing + synthesis       |
+| 🔍 Dwight | `research`                    | Web research, analysis    |
+| 👩‍💻 Ross   | `engineering`                 | Code, APIs, architecture  |
+| 📱 Kelly  | `social`                      | Twitter/X, viral content  |
+| ✍️ Pam    | `writing`                     | Blog posts, documentation |
 
 ## Quick Start
 
@@ -104,10 +104,10 @@ asyncio.run(main())
 
 ## Configuration
 
-| Environment Variable | Default | Description |
-|---------------------|---------|-------------|
-| `LANGGRAPH_MODEL` | `gpt-4.1-mini` | Model to use for all agent nodes |
-| `OPENAI_API_KEY` | — | Required: OpenAI API key |
+| Environment Variable | Default        | Description                      |
+| -------------------- | -------------- | -------------------------------- |
+| `LANGGRAPH_MODEL`    | `gpt-4.1-mini` | Model to use for all agent nodes |
+| `OPENAI_API_KEY`     | —              | Required: OpenAI API key         |
 
 ## How It Works
 
@@ -130,8 +130,8 @@ This is the pattern every production multi-agent system uses in 2026.
 
 ## Files
 
-| File | Purpose |
-|------|---------|
-| `orchestrator.py` | Main graph definition, agent nodes, routing logic, CLI |
-| `requirements.txt` | Pinned dependencies |
-| `__init__.py` | Package marker |
+| File               | Purpose                                                |
+| ------------------ | ------------------------------------------------------ |
+| `orchestrator.py`  | Main graph definition, agent nodes, routing logic, CLI |
+| `requirements.txt` | Pinned dependencies                                    |
+| `__init__.py`      | Package marker                                         |

@@ -66,30 +66,32 @@ print(result["result"])
 
 ## Agents
 
-| Agent | Role | Speciality |
-|-------|------|-----------|
-| 🔍 Dwight | Research & Intel | Web research, competitive analysis |
-| 👩‍💻 Ross | Engineering | Code, APIs, architecture |
-| 📱 Kelly | Social Media | Twitter/X, viral content |
-| ✍️ Pam | Writing | Blog posts, documentation |
-| 🎯 Monica | Chief of Staff | Orchestration (hierarchical mode only) |
+| Agent     | Role             | Speciality                             |
+| --------- | ---------------- | -------------------------------------- |
+| 🔍 Dwight | Research & Intel | Web research, competitive analysis     |
+| 👩‍💻 Ross   | Engineering      | Code, APIs, architecture               |
+| 📱 Kelly  | Social Media     | Twitter/X, viral content               |
+| ✍️ Pam    | Writing          | Blog posts, documentation              |
+| 🎯 Monica | Chief of Staff   | Orchestration (hierarchical mode only) |
 
 ## Configuration
 
-| Environment Variable | Default | Description |
-|---------------------|---------|-------------|
-| `OPENAI_API_KEY` | — | Required: OpenAI API key |
-| `OPENAI_MODEL_NAME` | `gpt-4.1-mini` | Model for all agents |
+| Environment Variable | Default        | Description              |
+| -------------------- | -------------- | ------------------------ |
+| `OPENAI_API_KEY`     | —              | Required: OpenAI API key |
+| `OPENAI_MODEL_NAME`  | `gpt-4.1-mini` | Model for all agents     |
 
 ## Process Modes
 
 ### Sequential (default)
+
 Tasks execute in order: Research → Engineering → Social → Writing.
 Each agent sees the output of previous agents via context sharing.
 
 Best for: straightforward tasks where order matters.
 
 ### Hierarchical
+
 Monica (manager agent) delegates tasks to specialists, monitors progress,
 and re-delegates if quality isn't met.
 
@@ -99,17 +101,17 @@ Best for: complex tasks requiring dynamic routing and quality control.
 
 ## LangGraph vs CrewAI: When to Use Which
 
-| Dimension | LangGraph (`langgraph/`) | CrewAI (`crewai/`) |
-|-----------|-------------------------|-------------------|
-| **Paradigm** | Graph-based (nodes + edges) | Crew-based (agents + tasks) |
-| **Control Flow** | Explicit conditional edges | Process modes (sequential/hierarchical) |
-| **Parallelism** | Native parallel fan-out | Sequential by default (hierarchical has delegation) |
-| **State** | Custom `AgentState` dataclass | Built-in context sharing between tasks |
-| **Human-in-the-Loop** | Native `interrupt()` support | Callbacks / guardrails |
-| **Streaming** | `astream()` per-node | Event-based callbacks |
-| **Best For** | Complex routing, HITL, custom flows | Quick setup, role-based teams |
-| **Learning Curve** | Steeper (graph concepts) | Gentler (agents + tasks mental model) |
-| **Production Maturity** | Very high (LangChain ecosystem) | Growing rapidly (2025-2026 breakout) |
+| Dimension               | LangGraph (`langgraph/`)            | CrewAI (`crewai/`)                                  |
+| ----------------------- | ----------------------------------- | --------------------------------------------------- |
+| **Paradigm**            | Graph-based (nodes + edges)         | Crew-based (agents + tasks)                         |
+| **Control Flow**        | Explicit conditional edges          | Process modes (sequential/hierarchical)             |
+| **Parallelism**         | Native parallel fan-out             | Sequential by default (hierarchical has delegation) |
+| **State**               | Custom `AgentState` dataclass       | Built-in context sharing between tasks              |
+| **Human-in-the-Loop**   | Native `interrupt()` support        | Callbacks / guardrails                              |
+| **Streaming**           | `astream()` per-node                | Event-based callbacks                               |
+| **Best For**            | Complex routing, HITL, custom flows | Quick setup, role-based teams                       |
+| **Learning Curve**      | Steeper (graph concepts)            | Gentler (agents + tasks mental model)               |
+| **Production Maturity** | Very high (LangChain ecosystem)     | Growing rapidly (2025-2026 breakout)                |
 
 ### Recommendation
 

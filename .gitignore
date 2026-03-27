@@ -38,6 +38,9 @@ Thumbs.db
 # ─── Temp/build files ──────────────────────────────────────────────────────
 *.log
 *.tmp
+__pycache__/
+*.pyc
+*.pyo
 node_modules/
 npm-debug.log*
 

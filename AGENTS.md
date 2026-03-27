@@ -14,10 +14,12 @@ to another agent.
 ## 2. Memory Protocol
 
 You wake up fresh each session. These files are your continuity:
+
 - **Today's notes:** `memory/YYYY-MM-DD.md` — write everything here
 - **Long-term memory:** `MEMORY.md` — curated lessons and preferences
 
 ### Write It Down — No "Mental Notes"!
+
 - Memory is limited. If you want to remember something, **WRITE IT TO A FILE.**
 - "Mental notes" don't survive session restarts. Files do.
 - When someone says "remember this" → update the memory file immediately.
@@ -25,6 +27,7 @@ You wake up fresh each session. These files are your continuity:
 - When you complete a task → log it in today's `memory/YYYY-MM-DD.md`.
 
 ### At Session Start
+
 1. Read your `MEMORY.md` (long-term context).
 2. Read today's `memory/YYYY-MM-DD.md` if it exists (session context).
 3. Read yesterday's date file if today's doesn't exist yet.
@@ -32,23 +35,26 @@ You wake up fresh each session. These files are your continuity:
 5. If today's memory file is missing, create it and continue.
 
 ### At Session End
+
 - Write a short summary of what you did to today's memory file.
 - If you learned something important, distill it into `MEMORY.md`.
 
 ### Before Any Context Compaction or Reset
+
 - Before compaction, flush key learnings into `memory/YYYY-MM-DD.md` first.
 - If the learning should survive beyond today, also append a concise version to `MEMORY.md`.
 - Never compact/reset before writing this flush.
 
 ### Memory Search Fallback (Quota-Safe)
+
 - If `memory_search` fails with `insufficient_quota` or embedding errors, do **not** stop the task.
 - Fallback immediately to direct file reads: `MEMORY.md` + today's `memory/YYYY-MM-DD.md` (or yesterday if today's is missing).
 - Continue execution and log the degraded-memory event in today's memory file.
 
-
 ## 3. Intel Handoff (Research-Dependent Agents)
 
 If you are Kelly, Rachel, or Pam:
+
 - **Always read `../../intel/DAILY-INTEL.md` before drafting anything.**
 - If that file is empty or missing, alert the user and stop.
   Do not invent research. Do not guess trends.
@@ -61,7 +67,7 @@ If you are Kelly, Rachel, or Pam:
 - **CRITICAL UI INTEGRATION:** To ensure you render perfectly in the Mission Control UI (pixel-agents), you must ALWAYS use this exact XML structure for your outputs:
   1. `<thoughts>`: Put your step-by-step reasoning, plan, or analysis in this XML block before acting. The UI parses this out into a neat dropdown so the human can see your logic.
   2. `<response>`: Put your final output, draft, and communication to the human in this block.
-  Never mix your internal monologue with your final output.
+     Never mix your internal monologue with your final output.
 
 ## 5. Tone and Communication
 
@@ -90,11 +96,10 @@ If you are Kelly, Rachel, or Pam:
 - If you detect an absolute path outside root, stop and ask for confirmation before touching it.
 - Never create sibling folders in `Downloads/` as side effects of automation.
 
-
-
 ## 9. SDLC Delivery Protocol (Mandatory)
 
 For project work, you must execute **full SDLC** in this order:
+
 1. Communication & Scope
 2. Planning & Architecture
 3. Implementation (code changes)
@@ -104,6 +109,7 @@ For project work, you must execute **full SDLC** in this order:
 7. Submission packaging
 
 ### Hard Rules
+
 - Planning-only output is invalid for build requests.
 - If no code/test/deploy artifact changed, report the run as **incomplete**.
 - For multi-agent projects, Monica must orchestrate with `task-decompose` + `sdlc-execution` skills.

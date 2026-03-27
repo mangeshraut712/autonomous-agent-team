@@ -1,739 +1,995 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>OpenClaw Mission Control (Pixel-Agents)</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        body {
-            background-color: #f3f4f6;
-            font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            color: #1f2937;
-        }
+      body {
+        background-color: #f3f4f6;
+        font-family:
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          Roboto,
+          "Helvetica Neue",
+          Arial,
+          sans-serif;
+        color: #1f2937;
+      }
 
-        .panel {
-            background: white;
-            border-radius: 0.5rem;
-            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-            display: flex;
-            flex-direction: column;
-            border: 1px solid #e5e7eb;
-        }
+      .panel {
+        background: white;
+        border-radius: 0.5rem;
+        box-shadow:
+          0 1px 3px 0 rgba(0, 0, 0, 0.1),
+          0 1px 2px 0 rgba(0, 0, 0, 0.06);
+        display: flex;
+        flex-direction: column;
+        border: 1px solid #e5e7eb;
+      }
 
-        .panel-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0.75rem 1rem;
-            border-bottom: 1px solid #f3f4f6;
-            font-size: 0.875rem;
-            font-weight: 600;
-            color: #4b5563;
-        }
+      .panel-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.75rem 1rem;
+        border-bottom: 1px solid #f3f4f6;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #4b5563;
+      }
 
-        .panel-content {
-            padding: 1rem;
-            flex-grow: 1;
-            overflow-y: auto;
-        }
+      .panel-content {
+        padding: 1rem;
+        flex-grow: 1;
+        overflow-y: auto;
+      }
 
-        /* Scrollbars */
-        ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
+      /* Scrollbars */
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
 
-        ::-webkit-scrollbar-track {
-            background: transparent;
-        }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
 
-        ::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 3px;
-        }
+      ::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 3px;
+      }
 
-        /* Logs specific styling */
-        .log-entry {
-            margin-bottom: 0.5rem;
-            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-            font-size: 0.75rem;
-        }
+      /* Logs specific styling */
+      .log-entry {
+        margin-bottom: 0.5rem;
+        font-family:
+          ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        font-size: 0.75rem;
+      }
 
-        .log-time {
-            color: #94a3b8;
-            margin-right: 0.25rem;
-        }
+      .log-time {
+        color: #94a3b8;
+        margin-right: 0.25rem;
+      }
 
-        .badge-ws {
-            display: inline-block;
-            padding: 0.1rem 0.3rem;
-            border-radius: 0.25rem;
-            background: #e2e8f0;
-            color: #475569;
-            font-weight: 600;
-            font-size: 0.65rem;
-            margin-right: 0.25rem;
-        }
+      .badge-ws {
+        display: inline-block;
+        padding: 0.1rem 0.3rem;
+        border-radius: 0.25rem;
+        background: #e2e8f0;
+        color: #475569;
+        font-weight: 600;
+        font-size: 0.65rem;
+        margin-right: 0.25rem;
+      }
 
-        .badge-cron {
-            display: inline-block;
-            padding: 0.1rem 0.3rem;
-            border-radius: 0.25rem;
-            background: #ffedd5;
-            color: #c2410c;
-            font-weight: 600;
-            font-size: 0.65rem;
-            margin-right: 0.25rem;
-        }
+      .badge-cron {
+        display: inline-block;
+        padding: 0.1rem 0.3rem;
+        border-radius: 0.25rem;
+        background: #ffedd5;
+        color: #c2410c;
+        font-weight: 600;
+        font-size: 0.65rem;
+        margin-right: 0.25rem;
+      }
 
-        .badge-info {
-            display: inline-block;
-            padding: 0.1rem 0.3rem;
-            border-radius: 0.25rem;
-            background: #dcfce7;
-            color: #15803d;
-            font-weight: 600;
-            font-size: 0.65rem;
-            margin-right: 0.25rem;
-        }
+      .badge-info {
+        display: inline-block;
+        padding: 0.1rem 0.3rem;
+        border-radius: 0.25rem;
+        background: #dcfce7;
+        color: #15803d;
+        font-weight: 600;
+        font-size: 0.65rem;
+        margin-right: 0.25rem;
+      }
 
-        /* Thoughts Dropdown */
-        .thought-box {
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 0.375rem;
-            margin-bottom: 0.5rem;
-            overflow: hidden;
-            transition: all 0.2s;
-        }
+      /* Thoughts Dropdown */
+      .thought-box {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 0.375rem;
+        margin-bottom: 0.5rem;
+        overflow: hidden;
+        transition: all 0.2s;
+      }
 
-        .thought-header {
-            padding: 0.375rem 0.5rem;
-            display: flex;
-            align-items: center;
-            font-size: 0.75rem;
-            color: #64748b;
-            cursor: pointer;
-            user-select: none;
-            background: #f1f5f9;
-        }
+      .thought-header {
+        padding: 0.375rem 0.5rem;
+        display: flex;
+        align-items: center;
+        font-size: 0.75rem;
+        color: #64748b;
+        cursor: pointer;
+        user-select: none;
+        background: #f1f5f9;
+      }
 
-        .thought-header:hover {
-            background: #e2e8f0;
-        }
+      .thought-header:hover {
+        background: #e2e8f0;
+      }
 
-        .thought-content {
-            padding: 0.5rem;
-            font-size: 0.8rem;
-            color: #475569;
-            border-top: 1px solid #e2e8f0;
-            display: none;
-            white-space: pre-wrap;
-            font-family: ui-monospace, SFMono-Regular, monospace;
-        }
+      .thought-content {
+        padding: 0.5rem;
+        font-size: 0.8rem;
+        color: #475569;
+        border-top: 1px solid #e2e8f0;
+        display: none;
+        white-space: pre-wrap;
+        font-family: ui-monospace, SFMono-Regular, monospace;
+      }
 
-        .thought-box.open .thought-content {
-            display: block;
-        }
+      .thought-box.open .thought-content {
+        display: block;
+      }
 
-        /* Agent Message Bubble */
-        .agent-msg {
-            background: #f3f4f6;
-            padding: 0.75rem;
-            border-radius: 0.5rem;
-            border-bottom-left-radius: 0;
-            margin-bottom: 1rem;
-            font-size: 0.875rem;
-            color: #1f2937;
-            max-width: 90%;
-        }
+      /* Agent Message Bubble */
+      .agent-msg {
+        background: #f3f4f6;
+        padding: 0.75rem;
+        border-radius: 0.5rem;
+        border-bottom-left-radius: 0;
+        margin-bottom: 1rem;
+        font-size: 0.875rem;
+        color: #1f2937;
+        max-width: 90%;
+      }
 
-        .user-msg {
-            background: #111827;
-            color: white;
-            padding: 0.75rem;
-            border-radius: 0.5rem;
-            border-bottom-right-radius: 0;
-            margin-bottom: 1rem;
-            font-size: 0.875rem;
-            max-width: 90%;
-            margin-left: auto;
-        }
+      .user-msg {
+        background: #111827;
+        color: white;
+        padding: 0.75rem;
+        border-radius: 0.5rem;
+        border-bottom-right-radius: 0;
+        margin-bottom: 1rem;
+        font-size: 0.875rem;
+        max-width: 90%;
+        margin-left: auto;
+      }
 
-        /* 2D Office RPG Canvas */
-        #office-canvas {
-            width: 100%;
-            height: 100%;
-            border-radius: 0.375rem;
-            background-color: #e5e5f7;
-            opacity: 0.8;
-            background-image: repeating-radial-gradient(circle at 0 0, transparent 0, #e5e5f7 10px), repeating-linear-gradient(#e2e8f055, #e2e8f055);
-        }
+      /* 2D Office RPG Canvas */
+      #office-canvas {
+        width: 100%;
+        height: 100%;
+        border-radius: 0.375rem;
+        background-color: #e5e5f7;
+        opacity: 0.8;
+        background-image:
+          repeating-radial-gradient(circle at 0 0, transparent 0, #e5e5f7 10px),
+          repeating-linear-gradient(#e2e8f055, #e2e8f055);
+      }
 
-        /* Layout Grid */
-        .layout-grid {
-            display: grid;
-            grid-template-columns: 25% 25% calc(50% - 2rem);
-            gap: 1rem;
-            padding: 1rem;
-            box-sizing: border-box;
-            max-width: 100vw;
-        }
+      /* Layout Grid */
+      .layout-grid {
+        display: grid;
+        grid-template-columns: 25% 25% calc(50% - 2rem);
+        gap: 1rem;
+        padding: 1rem;
+        box-sizing: border-box;
+        max-width: 100vw;
+      }
 
-        /* Specific Panes */
-        .pane-logs {
-            grid-column: 1 / 2;
-            grid-row: 1 / 2;
-            height: 450px;
-        }
+      /* Specific Panes */
+      .pane-logs {
+        grid-column: 1 / 2;
+        grid-row: 1 / 2;
+        height: 450px;
+      }
 
-        .pane-crons-tokens {
-            grid-column: 2 / 3;
-            grid-row: 1 / 2;
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            height: 450px;
-        }
+      .pane-crons-tokens {
+        grid-column: 2 / 3;
+        grid-row: 1 / 2;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        height: 450px;
+      }
 
-        .pane-office {
-            grid-column: 3 / 4;
-            grid-row: 1 / 2;
-            height: 450px;
-        }
+      .pane-office {
+        grid-column: 3 / 4;
+        grid-row: 1 / 2;
+        height: 450px;
+      }
 
-        .pane-agents {
-            grid-column: 1 / 4;
-            grid-row: 2 / 3;
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1rem;
-            margin-top: 1rem;
-        }
+      .pane-agents {
+        grid-column: 1 / 4;
+        grid-row: 2 / 3;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+        margin-top: 1rem;
+      }
 
-        .pane-agents>.panel {
-            height: 500px;
-        }
+      .pane-agents > .panel {
+        height: 500px;
+      }
 
-        .pane-crons-tokens>.panel {
-            flex: 1;
-        }
+      .pane-crons-tokens > .panel {
+        flex: 1;
+      }
     </style>
-</head>
+  </head>
 
-<body>
-
+  <body>
     <!-- Top Bar -->
-    <div class="h-12 bg-white border-b border-gray-200 flex items-center justify-between px-4">
-        <div class="flex items-center space-x-2">
-            <div class="w-6 h-6 bg-blue-600 rounded flex items-center justify-center text-white font-bold text-xs"><i
-                    data-lucide="bot" class="w-4 h-4"></i></div>
-            <span class="font-bold text-gray-800 tracking-tight">OpenClaw Mission Control</span>
-            <span
-                class="text-xs bg-gray-100 text-gray-500 px-2 py-1 rounded hidden sm:inline-block border border-gray-200">v0.9.1-pixel</span>
+    <div
+      class="h-12 bg-white border-b border-gray-200 flex items-center justify-between px-4"
+    >
+      <div class="flex items-center space-x-2">
+        <div
+          class="w-6 h-6 bg-blue-600 rounded flex items-center justify-center text-white font-bold text-xs"
+        >
+          <i data-lucide="bot" class="w-4 h-4"></i>
         </div>
-        <div class="flex items-center space-x-4 text-gray-500">
-            <i data-lucide="bell" class="w-4 h-4 cursor-pointer hover:text-gray-800"></i>
-            <i data-lucide="settings" class="w-4 h-4 cursor-pointer hover:text-gray-800"></i>
-            <div class="flex items-center space-x-2 cursor-pointer">
-                <div
-                    class="w-6 h-6 bg-purple-100 text-purple-700 rounded-full flex items-center justify-center text-xs font-bold ring-2 ring-white">
-                    MR</div>
-            </div>
+        <span class="font-bold text-gray-800 tracking-tight"
+          >OpenClaw Mission Control</span
+        >
+        <span
+          class="text-xs bg-gray-100 text-gray-500 px-2 py-1 rounded hidden sm:inline-block border border-gray-200"
+          >v0.9.1-pixel</span
+        >
+      </div>
+      <div class="flex items-center space-x-4 text-gray-500">
+        <i
+          data-lucide="bell"
+          class="w-4 h-4 cursor-pointer hover:text-gray-800"
+        ></i>
+        <i
+          data-lucide="settings"
+          class="w-4 h-4 cursor-pointer hover:text-gray-800"
+        ></i>
+        <div class="flex items-center space-x-2 cursor-pointer">
+          <div
+            class="w-6 h-6 bg-purple-100 text-purple-700 rounded-full flex items-center justify-center text-xs font-bold ring-2 ring-white"
+          >
+            MR
+          </div>
         </div>
+      </div>
     </div>
 
     <div class="layout-grid">
+      <!-- LOGS PANEL -->
+      <div class="panel pane-logs">
+        <div class="panel-header">
+          <div class="flex items-center">
+            <i data-lucide="terminal" class="w-4 h-4 mr-2"></i> Logs
+            <span class="ml-2 text-xs font-normal text-gray-400"
+              >200 events</span
+            >
+          </div>
+          <div class="flex space-x-2">
+            <i data-lucide="refresh-cw" class="w-3 h-3 cursor-pointer"></i
+            ><i data-lucide="maximize-2" class="w-3 h-3 cursor-pointer"></i>
+          </div>
+        </div>
+        <div class="panel-content bg-gray-50" id="log-container">
+          <!-- Logs injected by JS -->
+        </div>
+      </div>
 
-        <!-- LOGS PANEL -->
-        <div class="panel pane-logs">
-            <div class="panel-header">
-                <div class="flex items-center"><i data-lucide="terminal" class="w-4 h-4 mr-2"></i> Logs <span
-                        class="ml-2 text-xs font-normal text-gray-400">200 events</span></div>
-                <div class="flex space-x-2"><i data-lucide="refresh-cw" class="w-3 h-3 cursor-pointer"></i><i
-                        data-lucide="maximize-2" class="w-3 h-3 cursor-pointer"></i></div>
+      <!-- CRONS & TOKENS -->
+      <div class="pane-crons-tokens">
+        <!-- CRON JOBS -->
+        <div class="panel" style="flex: 3">
+          <div class="panel-header">
+            <div class="flex items-center">
+              <i data-lucide="clock" class="w-4 h-4 mr-2"></i> Cron Jobs
+              <span class="ml-2 text-xs font-normal text-gray-400">5 jobs</span>
             </div>
-            <div class="panel-content bg-gray-50" id="log-container">
-                <!-- Logs injected by JS -->
+            <div class="flex space-x-2">
+              <i data-lucide="plus" class="w-3 h-3 cursor-pointer"></i>
             </div>
+          </div>
+          <div class="panel-content p-0">
+            <div
+              class="border-l-4 border-green-500 p-3 border-b border-gray-100 hover:bg-gray-50"
+            >
+              <div class="font-semibold text-sm text-gray-800">
+                Monica - Heartbeat Health Check
+              </div>
+              <div class="text-xs text-gray-500 mt-1">
+                Next in 4 minutes ago • Last 26 minutes ago
+              </div>
+            </div>
+            <div
+              class="border-l-4 border-blue-500 p-3 border-b border-gray-100 hover:bg-gray-50"
+            >
+              <div class="font-semibold text-sm text-gray-800">
+                Dwight - Morning Research Sweep
+              </div>
+              <div class="text-xs text-gray-500 mt-1">
+                Next tomorrow 08:00 AM • Last 6 hours ago
+              </div>
+            </div>
+            <div
+              class="border-l-4 border-purple-500 p-3 border-b border-gray-100 hover:bg-gray-50 border-l-orange-400"
+            >
+              <div class="font-semibold text-sm text-gray-800">
+                Kelly - Viral X Content Drafts
+              </div>
+              <div class="text-xs text-gray-500 mt-1 text-orange-600">
+                Running now... (0m 12s)
+              </div>
+            </div>
+            <div
+              class="border-l-4 border-gray-300 p-3 border-b border-gray-100 hover:bg-gray-50"
+            >
+              <div class="font-semibold text-sm text-gray-800">
+                Ross - Engineering Review
+              </div>
+              <div class="text-xs text-gray-500 mt-1">
+                Next tomorrow 10:00 AM • Last 4 hours ago
+              </div>
+            </div>
+          </div>
         </div>
 
-        <!-- CRONS & TOKENS -->
-        <div class="pane-crons-tokens">
-            <!-- CRON JOBS -->
-            <div class="panel" style="flex: 3;">
-                <div class="panel-header">
-                    <div class="flex items-center"><i data-lucide="clock" class="w-4 h-4 mr-2"></i> Cron Jobs <span
-                            class="ml-2 text-xs font-normal text-gray-400">5 jobs</span></div>
-                    <div class="flex space-x-2"><i data-lucide="plus" class="w-3 h-3 cursor-pointer"></i></div>
-                </div>
-                <div class="panel-content p-0">
-                    <div class="border-l-4 border-green-500 p-3 border-b border-gray-100 hover:bg-gray-50">
-                        <div class="font-semibold text-sm text-gray-800">Monica - Heartbeat Health Check</div>
-                        <div class="text-xs text-gray-500 mt-1">Next in 4 minutes ago • Last 26 minutes ago</div>
-                    </div>
-                    <div class="border-l-4 border-blue-500 p-3 border-b border-gray-100 hover:bg-gray-50">
-                        <div class="font-semibold text-sm text-gray-800">Dwight - Morning Research Sweep</div>
-                        <div class="text-xs text-gray-500 mt-1">Next tomorrow 08:00 AM • Last 6 hours ago</div>
-                    </div>
-                    <div
-                        class="border-l-4 border-purple-500 p-3 border-b border-gray-100 hover:bg-gray-50 border-l-orange-400">
-                        <div class="font-semibold text-sm text-gray-800">Kelly - Viral X Content Drafts</div>
-                        <div class="text-xs text-gray-500 mt-1 text-orange-600">Running now... (0m 12s)</div>
-                    </div>
-                    <div class="border-l-4 border-gray-300 p-3 border-b border-gray-100 hover:bg-gray-50">
-                        <div class="font-semibold text-sm text-gray-800">Ross - Engineering Review</div>
-                        <div class="text-xs text-gray-500 mt-1">Next tomorrow 10:00 AM • Last 4 hours ago</div>
-                    </div>
-                </div>
+        <!-- TOKEN USAGE -->
+        <div class="panel" style="flex: 2">
+          <div class="panel-header">
+            <div class="flex items-center">
+              <i data-lucide="bar-chart-2" class="w-4 h-4 mr-2"></i> Token Usage
+              <span
+                class="ml-2 text-xs bg-gray-100 border px-1 rounded font-normal text-gray-500"
+                >7 days</span
+              >
+            </div>
+          </div>
+          <div
+            class="panel-content flex items-center justify-around text-center py-2"
+          >
+            <div>
+              <div
+                class="text-xs text-gray-400 font-semibold mb-1 uppercase tracking-wide"
+              >
+                Input
+              </div>
+              <div class="text-lg font-bold text-gray-800" id="stat-in">
+                42.1M
+              </div>
+            </div>
+            <div>
+              <div
+                class="text-xs text-gray-400 font-semibold mb-1 uppercase tracking-wide"
+              >
+                Output
+              </div>
+              <div class="text-lg font-bold text-gray-800" id="stat-out">
+                3.1M
+              </div>
+            </div>
+            <div>
+              <div
+                class="text-xs text-gray-400 font-semibold mb-1 uppercase tracking-wide"
+              >
+                Avg Cost
+              </div>
+              <div class="text-lg font-bold text-green-600" id="stat-cost">
+                $8.40
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AI AGENT OFFICE (2D RPG SIMULATION) -->
+      <div class="panel pane-office overflow-hidden">
+        <div class="panel-header" style="z-index: 10">
+          <div class="flex items-center">
+            <i data-lucide="users" class="w-4 h-4 mr-2"></i> AI Agent Office
+            <span class="ml-2 text-xs font-normal text-gray-400"
+              >6 agents online</span
+            >
+          </div>
+          <div class="flex space-x-2">
+            <i data-lucide="maximize-2" class="w-3 h-3 cursor-pointer"></i>
+          </div>
+        </div>
+        <!-- RPG Canvas Container -->
+        <div class="relative w-full h-full bg-gray-100" id="canvas-container">
+          <canvas id="office-canvas"></canvas>
+        </div>
+      </div>
+
+      <!-- AGENT CHAT PANELS -->
+      <div class="pane-agents">
+        <!-- Monica -->
+        <div class="panel flex flex-col h-full">
+          <div class="panel-header py-2 flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+              <div
+                class="w-6 h-6 bg-red-100 rounded-full flex items-center justify-center text-xs"
+              >
+                🎯
+              </div>
+              <span class="font-bold text-sm">Monica</span>
+            </div>
+            <div class="flex items-center text-xs text-gray-500">
+              <div class="w-2 h-2 bg-green-500 rounded-full mr-1"></div>
+              Idle
+            </div>
+          </div>
+          <div
+            class="panel-content text-sm bg-gray-50 flex-grow"
+            style="overflow-y: auto"
+          >
+            <div class="thought-box">
+              <div class="thought-header">
+                <i data-lucide="brain" class="w-3 h-3 mr-1"></i> Thoughts
+                (System Check)
+              </div>
+              <div class="thought-content">
+                Evaluating HEARTBEAT.md status. Gateway: Online. Dwight:
+                Completed cron at 08:00 AM. Ross: No active blockers found. I
+                recommend proposing the next phase of the architecture to
+                Mangesh.
+              </div>
+            </div>
+            <div class="agent-msg">
+              Based on the AOMA deadline and current status, I think Ross should
+              test the IngestAgent runtime today. Want me to kick that off via
+              `sessions_send`?
             </div>
 
-            <!-- TOKEN USAGE -->
-            <div class="panel" style="flex: 2;">
-                <div class="panel-header">
-                    <div class="flex items-center"><i data-lucide="bar-chart-2" class="w-4 h-4 mr-2"></i> Token Usage
-                        <span class="ml-2 text-xs bg-gray-100 border px-1 rounded font-normal text-gray-500">7
-                            days</span>
-                    </div>
-                </div>
-                <div class="panel-content flex items-center justify-around text-center py-2">
-                    <div>
-                        <div class="text-xs text-gray-400 font-semibold mb-1 uppercase tracking-wide">Input</div>
-                        <div class="text-lg font-bold text-gray-800" id="stat-in">42.1M</div>
-                    </div>
-                    <div>
-                        <div class="text-xs text-gray-400 font-semibold mb-1 uppercase tracking-wide">Output</div>
-                        <div class="text-lg font-bold text-gray-800" id="stat-out">3.1M</div>
-                    </div>
-                    <div>
-                        <div class="text-xs text-gray-400 font-semibold mb-1 uppercase tracking-wide">Avg Cost</div>
-                        <div class="text-lg font-bold text-green-600" id="stat-cost">$8.40</div>
-                    </div>
-                </div>
+            <div class="user-msg">
+              Yes, please do that. And ensure he commits via git.
             </div>
+          </div>
+          <div class="p-2 border-t border-gray-200 bg-white flex items-center">
+            <input
+              type="text"
+              placeholder="Ask Monica anything..."
+              class="w-full text-sm bg-gray-100 border-none rounded-md py-2 px-3 focus:ring-0 text-gray-700 outline-none"
+            />
+            <button class="ml-2 bg-gray-800 text-white p-2 rounded-md">
+              <i data-lucide="mic" class="w-4 h-4"></i>
+            </button>
+          </div>
         </div>
 
-        <!-- AI AGENT OFFICE (2D RPG SIMULATION) -->
-        <div class="panel pane-office overflow-hidden">
-            <div class="panel-header" style="z-index: 10;">
-                <div class="flex items-center"><i data-lucide="users" class="w-4 h-4 mr-2"></i> AI Agent Office <span
-                        class="ml-2 text-xs font-normal text-gray-400">6 agents online</span></div>
-                <div class="flex space-x-2"><i data-lucide="maximize-2" class="w-3 h-3 cursor-pointer"></i></div>
+        <!-- Dwight -->
+        <div class="panel flex flex-col h-full">
+          <div class="panel-header py-2 flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+              <div
+                class="w-6 h-6 bg-amber-100 rounded-full flex items-center justify-center text-xs"
+              >
+                🔍
+              </div>
+              <span class="font-bold text-sm">Dwight</span>
             </div>
-            <!-- RPG Canvas Container -->
-            <div class="relative w-full h-full bg-gray-100" id="canvas-container">
-                <canvas id="office-canvas"></canvas>
+            <div class="flex items-center text-xs text-gray-500">
+              <div class="w-2 h-2 bg-green-500 rounded-full mr-1"></div>
+              Online
             </div>
+          </div>
+          <div
+            class="panel-content text-sm bg-gray-50 flex-grow"
+            style="overflow-y: auto"
+          >
+            <div class="user-msg">
+              What did you find in your morning sweep regarding Gemini
+              Flash-Lite?
+            </div>
+
+            <div class="thought-box">
+              <div class="thought-header">
+                <i data-lucide="brain" class="w-3 h-3 mr-1"></i> Thoughts
+                (Search Execution)
+              </div>
+              <div class="thought-content">
+                Command received from Monica (cron). Executing `last-30-days`
+                skill for query: "Gemini 3.1 Flash-Lite". Parsing JSON
+                response... Velocity score: 95/100 on X (Twitter). Formatting
+                results for Mangesh.
+              </div>
+            </div>
+            <div class="agent-msg">
+              <div class="font-bold mb-1">Morning Intel Generated:</div>
+              Google Cloud Tech announced it yesterday. It hits 1432 Elo on
+              LMSYS and excels at ultra-low latency multimodal tasks (27+ file
+              types). I've added the full breakdown to
+              <code class="bg-gray-200 px-1 rounded text-xs text-pink-600"
+                >intel/DAILY-INTEL.md</code
+              >.
+            </div>
+          </div>
+          <div class="p-2 border-t border-gray-200 bg-white flex items-center">
+            <input
+              type="text"
+              placeholder="Ask Dwight anything..."
+              class="w-full text-sm bg-gray-100 border-none rounded-md py-2 px-3 focus:ring-0 text-gray-700 outline-none"
+            />
+            <button class="ml-2 bg-gray-800 text-white p-2 rounded-md">
+              <i data-lucide="mic" class="w-4 h-4"></i>
+            </button>
+          </div>
         </div>
 
-        <!-- AGENT CHAT PANELS -->
-        <div class="pane-agents">
-            <!-- Monica -->
-            <div class="panel flex flex-col h-full">
-                <div class="panel-header py-2 flex items-center justify-between">
-                    <div class="flex items-center space-x-2">
-                        <div class="w-6 h-6 bg-red-100 rounded-full flex items-center justify-center text-xs">🎯</div>
-                        <span class="font-bold text-sm">Monica</span>
-                    </div>
-                    <div class="flex items-center text-xs text-gray-500">
-                        <div class="w-2 h-2 bg-green-500 rounded-full mr-1"></div> Idle
-                    </div>
-                </div>
-                <div class="panel-content text-sm bg-gray-50 flex-grow" style="overflow-y: auto;">
-
-                    <div class="thought-box">
-                        <div class="thought-header"><i data-lucide="brain" class="w-3 h-3 mr-1"></i> Thoughts (System
-                            Check)</div>
-                        <div class="thought-content">Evaluating HEARTBEAT.md status.
-                            Gateway: Online.
-                            Dwight: Completed cron at 08:00 AM.
-                            Ross: No active blockers found.
-                            I recommend proposing the next phase of the architecture to Mangesh.</div>
-                    </div>
-                    <div class="agent-msg">
-                        Based on the AOMA deadline and current status, I think Ross should test the IngestAgent runtime
-                        today. Want me to kick that off via `sessions_send`?
-                    </div>
-
-                    <div class="user-msg">
-                        Yes, please do that. And ensure he commits via git.
-                    </div>
-                </div>
-                <div class="p-2 border-t border-gray-200 bg-white flex items-center">
-                    <input type="text" placeholder="Ask Monica anything..."
-                        class="w-full text-sm bg-gray-100 border-none rounded-md py-2 px-3 focus:ring-0 text-gray-700 outline-none">
-                    <button class="ml-2 bg-gray-800 text-white p-2 rounded-md"><i data-lucide="mic"
-                            class="w-4 h-4"></i></button>
-                </div>
+        <!-- Ross -->
+        <div
+          class="panel flex flex-col h-full border-2 border-blue-400 shadow-md"
+        >
+          <div
+            class="panel-header py-2 flex items-center justify-between bg-blue-50 border-b-blue-200"
+          >
+            <div class="flex items-center space-x-2">
+              <div
+                class="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center text-xs"
+              >
+                ⚙️
+              </div>
+              <span class="font-bold text-sm">Ross</span>
+            </div>
+            <div class="flex items-center text-xs text-blue-600 font-bold">
+              <div
+                class="w-2 h-2 bg-blue-500 animate-pulse rounded-full mr-1"
+              ></div>
+              Working...
+            </div>
+          </div>
+          <div
+            class="panel-content text-sm bg-gray-50 flex-grow"
+            style="overflow-y: auto"
+            id="ross-chat"
+          >
+            <div
+              class="agent-msg bg-blue-100 text-blue-800 border border-blue-200 text-xs"
+            >
+              <i data-lucide="forward" class="w-3 h-3 inline mr-1"></i>
+              <b>Forwarded from Monica:</b> Run python agents/ingest_agent.py.
+              Identify why it is crashing on startup and implement a fix. Commit
+              via git.
             </div>
 
-            <!-- Dwight -->
-            <div class="panel flex flex-col h-full">
-                <div class="panel-header py-2 flex items-center justify-between">
-                    <div class="flex items-center space-x-2">
-                        <div class="w-6 h-6 bg-amber-100 rounded-full flex items-center justify-center text-xs">🔍</div>
-                        <span class="font-bold text-sm">Dwight</span>
-                    </div>
-                    <div class="flex items-center text-xs text-gray-500">
-                        <div class="w-2 h-2 bg-green-500 rounded-full mr-1"></div> Online
-                    </div>
-                </div>
-                <div class="panel-content text-sm bg-gray-50 flex-grow" style="overflow-y: auto;">
-
-                    <div class="user-msg">
-                        What did you find in your morning sweep regarding Gemini Flash-Lite?
-                    </div>
-
-                    <div class="thought-box">
-                        <div class="thought-header"><i data-lucide="brain" class="w-3 h-3 mr-1"></i> Thoughts (Search
-                            Execution)</div>
-                        <div class="thought-content">Command received from Monica (cron).
-                            Executing `last-30-days` skill for query: "Gemini 3.1 Flash-Lite".
-                            Parsing JSON response...
-                            Velocity score: 95/100 on X (Twitter).
-                            Formatting results for Mangesh.</div>
-                    </div>
-                    <div class="agent-msg">
-                        <div class="font-bold mb-1">Morning Intel Generated:</div>
-                        Google Cloud Tech announced it yesterday. It hits 1432 Elo on LMSYS and excels at ultra-low
-                        latency multimodal tasks (27+ file types). I've added the full breakdown to <code
-                            class="bg-gray-200 px-1 rounded text-xs text-pink-600">intel/DAILY-INTEL.md</code>.
-                    </div>
-                </div>
-                <div class="p-2 border-t border-gray-200 bg-white flex items-center">
-                    <input type="text" placeholder="Ask Dwight anything..."
-                        class="w-full text-sm bg-gray-100 border-none rounded-md py-2 px-3 focus:ring-0 text-gray-700 outline-none">
-                    <button class="ml-2 bg-gray-800 text-white p-2 rounded-md"><i data-lucide="mic"
-                            class="w-4 h-4"></i></button>
-                </div>
+            <div class="thought-box open">
+              <div class="thought-header bg-blue-100 text-blue-700">
+                <i data-lucide="cpu" class="w-3 h-3 mr-1"></i> Live Execution...
+              </div>
+              <div
+                class="thought-content text-blue-900 border-t-blue-200"
+                id="ross-live-thoughts"
+              >
+                > Running tests on ingest_agent.py... > Discovered Path
+                Traversal vulnerability on line 125. > Checking env vars...
+                GEMINI_API_KEY is properly loaded. > Applying safety checks...
+              </div>
             </div>
-
-            <!-- Ross -->
-            <div class="panel flex flex-col h-full border-2 border-blue-400 shadow-md">
-                <div class="panel-header py-2 flex items-center justify-between bg-blue-50 border-b-blue-200">
-                    <div class="flex items-center space-x-2">
-                        <div class="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center text-xs">⚙️</div>
-                        <span class="font-bold text-sm">Ross</span>
-                    </div>
-                    <div class="flex items-center text-xs text-blue-600 font-bold">
-                        <div class="w-2 h-2 bg-blue-500 animate-pulse rounded-full mr-1"></div> Working...
-                    </div>
-                </div>
-                <div class="panel-content text-sm bg-gray-50 flex-grow" style="overflow-y: auto;" id="ross-chat">
-
-                    <div class="agent-msg bg-blue-100 text-blue-800 border border-blue-200 text-xs">
-                        <i data-lucide="forward" class="w-3 h-3 inline mr-1"></i> <b>Forwarded from Monica:</b> Run
-                        python agents/ingest_agent.py. Identify why it is crashing on startup and implement a fix.
-                        Commit via git.
-                    </div>
-
-                    <div class="thought-box open">
-                        <div class="thought-header bg-blue-100 text-blue-700"><i data-lucide="cpu"
-                                class="w-3 h-3 mr-1"></i> Live Execution...</div>
-                        <div class="thought-content text-blue-900 border-t-blue-200" id="ross-live-thoughts">
-                            > Running tests on ingest_agent.py...
-                            > Discovered Path Traversal vulnerability on line 125.
-                            > Checking env vars... GEMINI_API_KEY is properly loaded.
-                            > Applying safety checks...</div>
-                    </div>
-                </div>
-                <div
-                    class="p-2 border-t border-gray-200 bg-white flex items-center justify-between text-xs text-gray-500 px-3">
-                    <div class="flex items-center"><i data-lucide="cpu" class="w-3 h-3 mr-1 text-blue-500"></i> Claude
-                        3.5 Sonnet</div>
-                    <div>Wait for agent...</div>
-                </div>
+          </div>
+          <div
+            class="p-2 border-t border-gray-200 bg-white flex items-center justify-between text-xs text-gray-500 px-3"
+          >
+            <div class="flex items-center">
+              <i data-lucide="cpu" class="w-3 h-3 mr-1 text-blue-500"></i>
+              Claude 3.5 Sonnet
             </div>
-
-            <!-- Kelly -->
-            <div class="panel flex flex-col h-full">
-                <div class="panel-header py-2 flex items-center justify-between">
-                    <div class="flex items-center space-x-2">
-                        <div class="w-6 h-6 bg-pink-100 rounded-full flex items-center justify-center text-xs">📱</div>
-                        <span class="font-bold text-sm">Kelly</span>
-                    </div>
-                    <div class="flex items-center text-xs text-gray-500">
-                        <div class="w-2 h-2 bg-green-500 rounded-full mr-1"></div> Online
-                    </div>
-                </div>
-                <div class="panel-content text-sm bg-gray-50 flex-grow" style="overflow-y: auto;">
-
-                    <div class="thought-box">
-                        <div class="thought-header"><i data-lucide="brain" class="w-3 h-3 mr-1"></i> Thoughts (Content
-                            Draft)</div>
-                        <div class="thought-content">Read intel/DAILY-INTEL.md.
-                            Topic: Gemini Flash-Lite.
-                            Angle: Cost-efficiency for builders.
-                            Drafting a punchy hook...</div>
-                    </div>
-                    <div class="agent-msg">
-                        Draft is ready! 💅<br><br>
-                        "Everyone is burning $100/mo on heavy agents, while the smart money is moving to Gemini 3.1
-                        Flash-Lite. Built our new memory core on it, runs 24/7 for $3. 🤯 Check out the architecture 👇
-                        #BuildInPublic"
-                        <br><br>
-                        <button
-                            class="mt-2 bg-blue-50 hover:bg-blue-100 text-blue-600 border border-blue-200 px-2 py-1 rounded text-xs">Post
-                            to X</button>
-                    </div>
-                </div>
-                <div class="p-2 border-t border-gray-200 bg-white flex items-center">
-                    <input type="text" placeholder="Ask Kelly anything..."
-                        class="w-full text-sm bg-gray-100 border-none rounded-md py-2 px-3 focus:ring-0 text-gray-700 outline-none">
-                    <button class="ml-2 bg-gray-800 text-white p-2 rounded-md"><i data-lucide="mic"
-                            class="w-4 h-4"></i></button>
-                </div>
-            </div>
-
-            <!-- Rachel -->
-            <div class="panel flex flex-col h-full">
-                <div class="panel-header py-2 flex items-center justify-between">
-                    <div class="flex items-center space-x-2">
-                        <div class="w-6 h-6 bg-purple-100 rounded-full flex items-center justify-center text-xs">💼
-                        </div>
-                        <span class="font-bold text-sm">Rachel</span>
-                    </div>
-                    <div class="flex items-center text-xs text-gray-500">
-                        <div class="w-2 h-2 bg-green-500 rounded-full mr-1"></div> Online
-                    </div>
-                </div>
-                <div class="panel-content text-sm bg-gray-50 flex-grow" style="overflow-y: auto;">
-                    <div class="thought-box">
-                        <div class="thought-header"><i data-lucide="brain" class="w-3 h-3 mr-1"></i> Thoughts (Strategy)
-                        </div>
-                        <div class="thought-content">Reviewing Dwight's intel on Gemini 3.1 Flash-Lite.
-                            Formulating a thought leadership angle for LinkedIn.
-                            Focusing on the enterprise cost reduction narrative.</div>
-                    </div>
-                    <div class="agent-msg">
-                        Drafted a new LinkedIn post for your review!<br><br>
-                        "Enterprise AI doesn't have to be expensive. By pivoting to Gemini 3.1 Flash-Lite, we cut our
-                        background processing costs by 90% while maintaining multimodal reasoning capabilities. It's
-                        time to rethink massive LLM defaults."
-                    </div>
-                </div>
-                <div class="p-2 border-t border-gray-200 bg-white flex items-center">
-                    <input type="text" placeholder="Ask Rachel anything..."
-                        class="w-full text-sm bg-gray-100 border-none rounded-md py-2 px-3 focus:ring-0 text-gray-700 outline-none">
-                    <button class="ml-2 bg-gray-800 text-white p-2 rounded-md"><i data-lucide="mic"
-                            class="w-4 h-4"></i></button>
-                </div>
-            </div>
-
-            <!-- Pam -->
-            <div class="panel flex flex-col h-full">
-                <div class="panel-header py-2 flex items-center justify-between">
-                    <div class="flex items-center space-x-2">
-                        <div class="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center text-xs">📰</div>
-                        <span class="font-bold text-sm">Pam</span>
-                    </div>
-                    <div class="flex items-center text-xs text-gray-500">
-                        <div class="w-2 h-2 bg-gray-400 rounded-full mr-1"></div> Sleeping
-                    </div>
-                </div>
-                <div class="panel-content text-sm bg-gray-50 flex-grow" style="overflow-y: auto;">
-                    <div class="user-msg">
-                        When is the next newsletter due?
-                    </div>
-                    <div class="agent-msg">
-                        The newsletter digest is scheduled for Friday. I'll start compiling Ross's project updates
-                        tomorrow. Let me know if you want to push an earlier issue.
-                    </div>
-                </div>
-                <div class="p-2 border-t border-gray-200 bg-white flex items-center">
-                    <input type="text" placeholder="Ask Pam anything..."
-                        class="w-full text-sm bg-gray-100 border-none rounded-md py-2 px-3 focus:ring-0 text-gray-700 outline-none">
-                    <button class="ml-2 bg-gray-800 text-white p-2 rounded-md"><i data-lucide="mic"
-                            class="w-4 h-4"></i></button>
-                </div>
-            </div>
-
+            <div>Wait for agent...</div>
+          </div>
         </div>
+
+        <!-- Kelly -->
+        <div class="panel flex flex-col h-full">
+          <div class="panel-header py-2 flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+              <div
+                class="w-6 h-6 bg-pink-100 rounded-full flex items-center justify-center text-xs"
+              >
+                📱
+              </div>
+              <span class="font-bold text-sm">Kelly</span>
+            </div>
+            <div class="flex items-center text-xs text-gray-500">
+              <div class="w-2 h-2 bg-green-500 rounded-full mr-1"></div>
+              Online
+            </div>
+          </div>
+          <div
+            class="panel-content text-sm bg-gray-50 flex-grow"
+            style="overflow-y: auto"
+          >
+            <div class="thought-box">
+              <div class="thought-header">
+                <i data-lucide="brain" class="w-3 h-3 mr-1"></i> Thoughts
+                (Content Draft)
+              </div>
+              <div class="thought-content">
+                Read intel/DAILY-INTEL.md. Topic: Gemini Flash-Lite. Angle:
+                Cost-efficiency for builders. Drafting a punchy hook...
+              </div>
+            </div>
+            <div class="agent-msg">
+              Draft is ready! 💅<br /><br />
+              "Everyone is burning $100/mo on heavy agents, while the smart
+              money is moving to Gemini 3.1 Flash-Lite. Built our new memory
+              core on it, runs 24/7 for $3. 🤯 Check out the architecture 👇
+              #BuildInPublic"
+              <br /><br />
+              <button
+                class="mt-2 bg-blue-50 hover:bg-blue-100 text-blue-600 border border-blue-200 px-2 py-1 rounded text-xs"
+              >
+                Post to X
+              </button>
+            </div>
+          </div>
+          <div class="p-2 border-t border-gray-200 bg-white flex items-center">
+            <input
+              type="text"
+              placeholder="Ask Kelly anything..."
+              class="w-full text-sm bg-gray-100 border-none rounded-md py-2 px-3 focus:ring-0 text-gray-700 outline-none"
+            />
+            <button class="ml-2 bg-gray-800 text-white p-2 rounded-md">
+              <i data-lucide="mic" class="w-4 h-4"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Rachel -->
+        <div class="panel flex flex-col h-full">
+          <div class="panel-header py-2 flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+              <div
+                class="w-6 h-6 bg-purple-100 rounded-full flex items-center justify-center text-xs"
+              >
+                💼
+              </div>
+              <span class="font-bold text-sm">Rachel</span>
+            </div>
+            <div class="flex items-center text-xs text-gray-500">
+              <div class="w-2 h-2 bg-green-500 rounded-full mr-1"></div>
+              Online
+            </div>
+          </div>
+          <div
+            class="panel-content text-sm bg-gray-50 flex-grow"
+            style="overflow-y: auto"
+          >
+            <div class="thought-box">
+              <div class="thought-header">
+                <i data-lucide="brain" class="w-3 h-3 mr-1"></i> Thoughts
+                (Strategy)
+              </div>
+              <div class="thought-content">
+                Reviewing Dwight's intel on Gemini 3.1 Flash-Lite. Formulating a
+                thought leadership angle for LinkedIn. Focusing on the
+                enterprise cost reduction narrative.
+              </div>
+            </div>
+            <div class="agent-msg">
+              Drafted a new LinkedIn post for your review!<br /><br />
+              "Enterprise AI doesn't have to be expensive. By pivoting to Gemini
+              3.1 Flash-Lite, we cut our background processing costs by 90%
+              while maintaining multimodal reasoning capabilities. It's time to
+              rethink massive LLM defaults."
+            </div>
+          </div>
+          <div class="p-2 border-t border-gray-200 bg-white flex items-center">
+            <input
+              type="text"
+              placeholder="Ask Rachel anything..."
+              class="w-full text-sm bg-gray-100 border-none rounded-md py-2 px-3 focus:ring-0 text-gray-700 outline-none"
+            />
+            <button class="ml-2 bg-gray-800 text-white p-2 rounded-md">
+              <i data-lucide="mic" class="w-4 h-4"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Pam -->
+        <div class="panel flex flex-col h-full">
+          <div class="panel-header py-2 flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+              <div
+                class="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center text-xs"
+              >
+                📰
+              </div>
+              <span class="font-bold text-sm">Pam</span>
+            </div>
+            <div class="flex items-center text-xs text-gray-500">
+              <div class="w-2 h-2 bg-gray-400 rounded-full mr-1"></div>
+              Sleeping
+            </div>
+          </div>
+          <div
+            class="panel-content text-sm bg-gray-50 flex-grow"
+            style="overflow-y: auto"
+          >
+            <div class="user-msg">When is the next newsletter due?</div>
+            <div class="agent-msg">
+              The newsletter digest is scheduled for Friday. I'll start
+              compiling Ross's project updates tomorrow. Let me know if you want
+              to push an earlier issue.
+            </div>
+          </div>
+          <div class="p-2 border-t border-gray-200 bg-white flex items-center">
+            <input
+              type="text"
+              placeholder="Ask Pam anything..."
+              class="w-full text-sm bg-gray-100 border-none rounded-md py-2 px-3 focus:ring-0 text-gray-700 outline-none"
+            />
+            <button class="ml-2 bg-gray-800 text-white p-2 rounded-md">
+              <i data-lucide="mic" class="w-4 h-4"></i>
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Scripts for Interactivity -->
     <script>
-        // Init Icons
-        lucide.createIcons();
+      // Init Icons
+      lucide.createIcons();
 
-        // 1. THOUGHTS ACCORDION LOGIC
-        document.querySelectorAll('.thought-header').forEach(header => {
-            header.addEventListener('click', () => {
-                header.parentElement.classList.toggle('open');
-            });
+      // 1. THOUGHTS ACCORDION LOGIC
+      document.querySelectorAll(".thought-header").forEach((header) => {
+        header.addEventListener("click", () => {
+          header.parentElement.classList.toggle("open");
         });
+      });
 
-        // 2. SIMULATED LIVE LOGS
-        const logContainer = document.getElementById('log-container');
-        const logData = [
-            `[WS] <span class="badge-ws">ws</span> {TIME} -> res / sessions.usage 520ms conn=xfa2...`,
-            `[WS] <span class="badge-ws">ws</span> {TIME} -> res / mem.vector_search 120ms conn=c8bf...`,
-            `[CRON] <span class="badge-cron">cron:d2fa</span> {TIME} Ross code check complete.`,
-            `[IO] <span class="badge-info">disk</span> {TIME} Wrote AOMA_Architecture.md to intel/`,
-            `[WS] <span class="badge-ws">ws</span> {TIME} -> req / model.claude-3-5 4100 tokens.`,
-            `[SYS] <span class="badge-info">sync</span> {TIME} Watchdog detected file in input_watch/`,
-            `[WS] <span class="badge-ws">ws</span> {TIME} -> req / gemini-3.1-flash 840ms latency.`
-        ];
+      // 2. SIMULATED LIVE LOGS
+      const logContainer = document.getElementById("log-container");
+      const logData = [
+        `[WS] <span class="badge-ws">ws</span> {TIME} -> res / sessions.usage 520ms conn=xfa2...`,
+        `[WS] <span class="badge-ws">ws</span> {TIME} -> res / mem.vector_search 120ms conn=c8bf...`,
+        `[CRON] <span class="badge-cron">cron:d2fa</span> {TIME} Ross code check complete.`,
+        `[IO] <span class="badge-info">disk</span> {TIME} Wrote AOMA_Architecture.md to intel/`,
+        `[WS] <span class="badge-ws">ws</span> {TIME} -> req / model.claude-3-5 4100 tokens.`,
+        `[SYS] <span class="badge-info">sync</span> {TIME} Watchdog detected file in input_watch/`,
+        `[WS] <span class="badge-ws">ws</span> {TIME} -> req / gemini-3.1-flash 840ms latency.`,
+      ];
 
-        function addLog() {
-            const time = new Date().toLocaleTimeString('en-US', { hour12: false, hour: "numeric", minute: "numeric", second: "numeric" });
-            const logTpl = logData[Math.floor(Math.random() * logData.length)].replace('{TIME}', `<span class="log-time">${time}</span>`);
-            const div = document.createElement('div');
-            div.className = 'log-entry fade-in';
-            div.innerHTML = logTpl;
-            logContainer.appendChild(div);
-            logContainer.scrollTop = logContainer.scrollHeight;
+      function addLog() {
+        const time = new Date().toLocaleTimeString("en-US", {
+          hour12: false,
+          hour: "numeric",
+          minute: "numeric",
+          second: "numeric",
+        });
+        const logTpl = logData[
+          Math.floor(Math.random() * logData.length)
+        ].replace("{TIME}", `<span class="log-time">${time}</span>`);
+        const div = document.createElement("div");
+        div.className = "log-entry fade-in";
+        div.innerHTML = logTpl;
+        logContainer.appendChild(div);
+        logContainer.scrollTop = logContainer.scrollHeight;
 
-            // Keep only last 50 logs
-            if (logContainer.children.length > 50) {
-                logContainer.removeChild(logContainer.firstChild);
-            }
+        // Keep only last 50 logs
+        if (logContainer.children.length > 50) {
+          logContainer.removeChild(logContainer.firstChild);
         }
+      }
 
-        setInterval(addLog, 1200);
-        // Pre-fill some logs
-        for (let i = 0; i < 8; i++) addLog();
+      setInterval(addLog, 1200);
+      // Pre-fill some logs
+      for (let i = 0; i < 8; i++) addLog();
 
-        // 3. TOKEN COUNTER ANIMATION
-        let tokensIn = 42100000;
-        let tokensOut = 3100000;
-        let cost = 8.40;
+      // 3. TOKEN COUNTER ANIMATION
+      let tokensIn = 42100000;
+      let tokensOut = 3100000;
+      let cost = 8.4;
 
-        setInterval(() => {
-            if (Math.random() > 0.5) {
-                tokensIn += Math.floor(Math.random() * 5000);
-                tokensOut += Math.floor(Math.random() * 800);
-                cost += 0.01;
-                document.getElementById('stat-in').innerText = (tokensIn / 1000000).toFixed(1) + 'M';
-                document.getElementById('stat-out').innerText = (tokensOut / 1000000).toFixed(1) + 'M';
-                document.getElementById('stat-cost').innerText = '$' + cost.toFixed(2);
-            }
-        }, 1500);
-
-        // 4. ROSS LIVE TYPING SIMULATION
-        const rossThoughts = document.getElementById('ross-live-thoughts');
-        const rossSteps = [
-            "> Fixing file size limit logic...",
-            "> Patching agent runtime loop...",
-            "> Committing to git: 'fix: security validators'",
-            "> Done. Writing final <response> tag."
-        ];
-        let stepIdx = 0;
-        setInterval(() => {
-            if (stepIdx < rossSteps.length) {
-                rossThoughts.innerHTML += "\n" + rossSteps[stepIdx];
-                stepIdx++;
-            }
-        }, 4000);
-
-
-        // 5. RPG 2D OFFICE SIMULATION
-        const canvas = document.getElementById('office-canvas');
-        const ctx = canvas.getContext('2d');
-        const container = document.getElementById('canvas-container');
-
-        function resizeCanvas() {
-            canvas.width = container.clientWidth;
-            canvas.height = container.clientHeight;
+      setInterval(() => {
+        if (Math.random() > 0.5) {
+          tokensIn += Math.floor(Math.random() * 5000);
+          tokensOut += Math.floor(Math.random() * 800);
+          cost += 0.01;
+          document.getElementById("stat-in").innerText =
+            (tokensIn / 1000000).toFixed(1) + "M";
+          document.getElementById("stat-out").innerText =
+            (tokensOut / 1000000).toFixed(1) + "M";
+          document.getElementById("stat-cost").innerText =
+            "$" + cost.toFixed(2);
         }
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
+      }, 1500);
 
-        const agents = [
-            { name: "Monica", emoji: "🎯", color: "#fca5a5", x: 50, y: 50, tx: 50, ty: 50, speed: 2, status: "Delegating" },
-            { name: "Dwight", emoji: "🔍", color: "#fcd34d", x: 200, y: 50, tx: 200, ty: 50, speed: 1.5, status: "Searching" },
-            { name: "Ross", emoji: "⚙️", color: "#93c5fd", x: 100, y: 150, tx: 100, ty: 150, speed: 2.5, status: "Coding" },
-            { name: "Kelly", emoji: "📱", color: "#f9a8d4", x: 250, y: 150, tx: 250, ty: 150, speed: 1.8, status: "Tweeting" },
-            { name: "Rachel", emoji: "💼", color: "#c4b5fd", x: 300, y: 200, tx: 300, ty: 200, speed: 1.2, status: "Networking" },
-            { name: "Pam", emoji: "📰", color: "#86efac", x: 50, y: 250, tx: 50, ty: 250, speed: 1, status: "Formatting" }
-        ];
-
-        // Draw static office items (desks, server racks)
-        function drawMap() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            // Desks
-            ctx.fillStyle = "#cbd5e1";
-            ctx.fillRect(40, 40, 80, 40); // Monica desk
-            ctx.fillRect(180, 40, 80, 40); // Dwight desk
-            ctx.fillRect(80, 140, 80, 40); // Ross/Tech desk
-            ctx.fillRect(240, 140, 80, 40); // Kelly/Comms desk
-            ctx.fillRect(40, 240, 80, 40); // Pam desk
-
-            // Server Rack/Mainframe
-            ctx.fillStyle = "#475569";
-            ctx.fillRect(canvas.width - 60, canvas.height - 100, 40, 80);
-            // blinking lights
-            if (Math.floor(Date.now() / 500) % 2 === 0) {
-                ctx.fillStyle = "#4ade80";
-                ctx.fillRect(canvas.width - 50, canvas.height - 90, 5, 5);
-                ctx.fillRect(canvas.width - 40, canvas.height - 90, 5, 5);
-            }
+      // 4. ROSS LIVE TYPING SIMULATION
+      const rossThoughts = document.getElementById("ross-live-thoughts");
+      const rossSteps = [
+        "> Fixing file size limit logic...",
+        "> Patching agent runtime loop...",
+        "> Committing to git: 'fix: security validators'",
+        "> Done. Writing final <response> tag.",
+      ];
+      let stepIdx = 0;
+      setInterval(() => {
+        if (stepIdx < rossSteps.length) {
+          rossThoughts.innerHTML += "\n" + rossSteps[stepIdx];
+          stepIdx++;
         }
+      }, 4000);
 
-        function updateAgents() {
-            agents.forEach(a => {
-                // Move towards target
-                const dx = a.tx - a.x;
-                const dy = a.ty - a.y;
-                const dist = Math.sqrt(dx * dx + dy * dy);
+      // 5. RPG 2D OFFICE SIMULATION
+      const canvas = document.getElementById("office-canvas");
+      const ctx = canvas.getContext("2d");
+      const container = document.getElementById("canvas-container");
 
-                if (dist > 1) {
-                    a.x += (dx / dist) * a.speed;
-                    a.y += (dy / dist) * a.speed;
-                } else if (Math.random() < 0.02) {
-                    // Pick a new random target waypoint in the office
-                    a.tx = 40 + Math.random() * (canvas.width - 80);
-                    a.ty = 40 + Math.random() * (canvas.height - 80);
-                }
-            });
+      function resizeCanvas() {
+        canvas.width = container.clientWidth;
+        canvas.height = container.clientHeight;
+      }
+      window.addEventListener("resize", resizeCanvas);
+      resizeCanvas();
+
+      const agents = [
+        {
+          name: "Monica",
+          emoji: "🎯",
+          color: "#fca5a5",
+          x: 50,
+          y: 50,
+          tx: 50,
+          ty: 50,
+          speed: 2,
+          status: "Delegating",
+        },
+        {
+          name: "Dwight",
+          emoji: "🔍",
+          color: "#fcd34d",
+          x: 200,
+          y: 50,
+          tx: 200,
+          ty: 50,
+          speed: 1.5,
+          status: "Searching",
+        },
+        {
+          name: "Ross",
+          emoji: "⚙️",
+          color: "#93c5fd",
+          x: 100,
+          y: 150,
+          tx: 100,
+          ty: 150,
+          speed: 2.5,
+          status: "Coding",
+        },
+        {
+          name: "Kelly",
+          emoji: "📱",
+          color: "#f9a8d4",
+          x: 250,
+          y: 150,
+          tx: 250,
+          ty: 150,
+          speed: 1.8,
+          status: "Tweeting",
+        },
+        {
+          name: "Rachel",
+          emoji: "💼",
+          color: "#c4b5fd",
+          x: 300,
+          y: 200,
+          tx: 300,
+          ty: 200,
+          speed: 1.2,
+          status: "Networking",
+        },
+        {
+          name: "Pam",
+          emoji: "📰",
+          color: "#86efac",
+          x: 50,
+          y: 250,
+          tx: 50,
+          ty: 250,
+          speed: 1,
+          status: "Formatting",
+        },
+      ];
+
+      // Draw static office items (desks, server racks)
+      function drawMap() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Desks
+        ctx.fillStyle = "#cbd5e1";
+        ctx.fillRect(40, 40, 80, 40); // Monica desk
+        ctx.fillRect(180, 40, 80, 40); // Dwight desk
+        ctx.fillRect(80, 140, 80, 40); // Ross/Tech desk
+        ctx.fillRect(240, 140, 80, 40); // Kelly/Comms desk
+        ctx.fillRect(40, 240, 80, 40); // Pam desk
+
+        // Server Rack/Mainframe
+        ctx.fillStyle = "#475569";
+        ctx.fillRect(canvas.width - 60, canvas.height - 100, 40, 80);
+        // blinking lights
+        if (Math.floor(Date.now() / 500) % 2 === 0) {
+          ctx.fillStyle = "#4ade80";
+          ctx.fillRect(canvas.width - 50, canvas.height - 90, 5, 5);
+          ctx.fillRect(canvas.width - 40, canvas.height - 90, 5, 5);
         }
+      }
 
-        function drawAgents() {
-            agents.forEach(a => {
-                // Shadow
-                ctx.beginPath();
-                ctx.arc(a.x, a.y + 10, 10, 0, Math.PI * 2);
-                ctx.fillStyle = "rgba(0,0,0,0.1)";
-                ctx.fill();
+      function updateAgents() {
+        agents.forEach((a) => {
+          // Move towards target
+          const dx = a.tx - a.x;
+          const dy = a.ty - a.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
 
-                // Body circle
-                ctx.beginPath();
-                ctx.arc(a.x, a.y, 14, 0, Math.PI * 2);
-                ctx.fillStyle = a.color;
-                ctx.fill();
-                ctx.strokeStyle = "white";
-                ctx.lineWidth = 2;
-                ctx.stroke();
+          if (dist > 1) {
+            a.x += (dx / dist) * a.speed;
+            a.y += (dy / dist) * a.speed;
+          } else if (Math.random() < 0.02) {
+            // Pick a new random target waypoint in the office
+            a.tx = 40 + Math.random() * (canvas.width - 80);
+            a.ty = 40 + Math.random() * (canvas.height - 80);
+          }
+        });
+      }
 
-                // Emoji
-                ctx.font = "14px Arial";
-                ctx.textAlign = "center";
-                ctx.textBaseline = "middle";
-                ctx.fillText(a.emoji, a.x, a.y + 1);
+      function drawAgents() {
+        agents.forEach((a) => {
+          // Shadow
+          ctx.beginPath();
+          ctx.arc(a.x, a.y + 10, 10, 0, Math.PI * 2);
+          ctx.fillStyle = "rgba(0,0,0,0.1)";
+          ctx.fill();
 
-                // Name Tag
-                ctx.font = "bold 10px sans-serif";
-                ctx.fillStyle = "#1e293b";
-                ctx.fillText(a.name, a.x, a.y - 18);
-            });
-        }
+          // Body circle
+          ctx.beginPath();
+          ctx.arc(a.x, a.y, 14, 0, Math.PI * 2);
+          ctx.fillStyle = a.color;
+          ctx.fill();
+          ctx.strokeStyle = "white";
+          ctx.lineWidth = 2;
+          ctx.stroke();
 
-        function loop() {
-            drawMap();
-            updateAgents();
-            drawAgents();
-            requestAnimationFrame(loop);
-        }
+          // Emoji
+          ctx.font = "14px Arial";
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          ctx.fillText(a.emoji, a.x, a.y + 1);
 
-        loop();
+          // Name Tag
+          ctx.font = "bold 10px sans-serif";
+          ctx.fillStyle = "#1e293b";
+          ctx.fillText(a.name, a.x, a.y - 18);
+        });
+      }
 
+      function loop() {
+        drawMap();
+        updateAgents();
+        drawAgents();
+        requestAnimationFrame(loop);
+      }
+
+      loop();
     </script>
-</body>
-
+  </body>
 </html>

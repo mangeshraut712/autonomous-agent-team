@@ -1,7 +1,8 @@
 # 🧠 Always-On Memory Agent — Intel Brief
-*Google Cloud Tech announced Gemini 3.1 Flash-Lite (2026-03-05)*
-*Gemini Live Agent Challenge — 12 days remaining*
-*Prize: $25,000 Grand Prize + Google Cloud Next 2026 tickets*
+
+_Google Cloud Tech announced Gemini 3.1 Flash-Lite (2026-03-05)_
+_Gemini Live Agent Challenge — 12 days remaining_
+_Prize: $25,000 Grand Prize + Google Cloud Next 2026 tickets_
 
 ---
 
@@ -16,19 +17,22 @@ Google's team released an open-source "Always-On Memory Agent" built on Google A
 **Eligible Category:** Live Agents 🗣️ OR Creative Storyteller ✍️  
 **Mandatory tech:** Gemini Live API OR Google ADK — **hosted on Google Cloud**  
 **Video required:** Demo of multimodal/agentic features working in real-time (no mockups)  
-**Bonus points:**  
-- Published blog/podcast/video with `#GeminiLiveAgentChallenge`  
-- Automated Cloud Deployment (IaC scripts / Terraform in public repo)  
-- Google Developer Group membership link  
+**Bonus points:**
+
+- Published blog/podcast/video with `#GeminiLiveAgentChallenge`
+- Automated Cloud Deployment (IaC scripts / Terraform in public repo)
+- Google Developer Group membership link
 
 ---
 
 ## 🏗️ What We're Building: Always-On Memory Agent (AOMA)
 
 **Core concept from Google's announcement:**
+
 > "Most AI agents suffer from amnesia. This project solves that by giving agents a persistent, evolving memory that runs 24/7 as a lightweight background process."
 
 **Our differentiation angle:**
+
 - Use Gemini 3.1 Flash-Lite for background processing (cheap + fast — exactly what Google said it's for)
 - Add a **real-time Gemini Live API voice interface** to query memory (satisfies Live Agents category AND their demo requirement)
 - 27+ file types supported via multimodal
@@ -76,21 +80,22 @@ Google's team released an open-source "Always-On Memory Agent" built on Google A
 ```
 /Users/mangeshraut/Downloads/Gemini Live Agent Challenge/
 ```
-*(Check if folder exists and what's there. Agents: DO NOT assume empty.)*
+
+_(Check if folder exists and what's there. Agents: DO NOT assume empty.)_
 
 ---
 
 ## 🛠️ Tech Stack
 
-| Component | Technology | Why |
-|-----------|-----------|-----|
-| Background agents | Google ADK (Python) | Required by contest |
-| Memory model | Gemini 3.1 Flash-Lite | Cheap, fast — 24/7 viable |
-| Voice interface | Gemini Live API | Satisfies "Live Agents" category |
-| Vector store | ChromaDB (local) + GCS | Persistent across restarts |
-| File watching | `watchdog` (Python) | Real-time file ingestion |
-| Deployment | Cloud Run + Terraform | Bonus points for IaC |
-| Frontend | HTML/JS WebSocket UI | Demo-able, real-time |
+| Component         | Technology             | Why                              |
+| ----------------- | ---------------------- | -------------------------------- |
+| Background agents | Google ADK (Python)    | Required by contest              |
+| Memory model      | Gemini 3.1 Flash-Lite  | Cheap, fast — 24/7 viable        |
+| Voice interface   | Gemini Live API        | Satisfies "Live Agents" category |
+| Vector store      | ChromaDB (local) + GCS | Persistent across restarts       |
+| File watching     | `watchdog` (Python)    | Real-time file ingestion         |
+| Deployment        | Cloud Run + Terraform  | Bonus points for IaC             |
+| Frontend          | HTML/JS WebSocket UI   | Demo-able, real-time             |
 
 ---
 
@@ -106,29 +111,29 @@ pip install google-cloud-storage google-cloud-run
 
 ## 🗓️ 12-Day Execution Plan
 
-| Day | Agent | Task |
-|-----|-------|------|
-| Day 1 (today) | Ross | Set up project structure, FastAPI + ADK scaffold |
-| Day 1 | Dwight | Research ADK best practices, ChromaDB setup guide |
-| Day 2 | Ross | Implement IngestAgent (watchdog + Gemini multimodal extraction) |
-| Day 3 | Ross | Implement ConsolidateAgent (timer + cross-cutting insights) |
-| Day 4 | Ross | Implement QueryAgent using Gemini Live API for voice |
-| Day 5 | Ross | Build WebSocket frontend for real-time demo |
-| Day 6 | Ross | ChromaDB vector storage + persistence |
-| Day 7 | Ross | Cloud Run deployment + Dockerfile |
-| Day 8 | Ross | Terraform IaC scripts for automated deployment |
-| Day 8 | Pam | Write blog post draft for bonus points |
-| Day 9 | Ross | Integration testing + demo prep |
-| Day 10 | Kelly+Rachel | Social posts with #GeminiLiveAgentChallenge |
-| Day 11 | Pam | Final README, Devpost narrative |
-| Day 12 | ALL | Record demo video + submit |
+| Day           | Agent        | Task                                                            |
+| ------------- | ------------ | --------------------------------------------------------------- |
+| Day 1 (today) | Ross         | Set up project structure, FastAPI + ADK scaffold                |
+| Day 1         | Dwight       | Research ADK best practices, ChromaDB setup guide               |
+| Day 2         | Ross         | Implement IngestAgent (watchdog + Gemini multimodal extraction) |
+| Day 3         | Ross         | Implement ConsolidateAgent (timer + cross-cutting insights)     |
+| Day 4         | Ross         | Implement QueryAgent using Gemini Live API for voice            |
+| Day 5         | Ross         | Build WebSocket frontend for real-time demo                     |
+| Day 6         | Ross         | ChromaDB vector storage + persistence                           |
+| Day 7         | Ross         | Cloud Run deployment + Dockerfile                               |
+| Day 8         | Ross         | Terraform IaC scripts for automated deployment                  |
+| Day 8         | Pam          | Write blog post draft for bonus points                          |
+| Day 9         | Ross         | Integration testing + demo prep                                 |
+| Day 10        | Kelly+Rachel | Social posts with #GeminiLiveAgentChallenge                     |
+| Day 11        | Pam          | Final README, Devpost narrative                                 |
+| Day 12        | ALL          | Record demo video + submit                                      |
 
 ---
 
 ## 🎬 Demo Script (for video)
 
 1. **Open terminal** — show `aoma serve` starting the agent system
-2. **Drop a PDF** into `/input` folder — show console: "Ingested in 4.2s, extracted 847 entities"  
+2. **Drop a PDF** into `/input` folder — show console: "Ingested in 4.2s, extracted 847 entities"
 3. **Drop an image** — show multimodal extraction working
 4. **Open voice interface** — speak: "What do you know about machine learning from my documents?"
 5. **Show real-time streaming response** with source citations
@@ -151,6 +156,7 @@ pip install google-cloud-storage google-cloud-run
 ## 📋 Current Project Status
 
 Check: `/Users/mangeshraut/Downloads/Gemini Live Agent Challenge/`
+
 - If project exists from previous sessions → Ross should review and continue
 - If empty → Ross should scaffold from scratch using the architecture above
 

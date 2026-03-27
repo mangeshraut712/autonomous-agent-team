@@ -1,6 +1,6 @@
 # MEMORY.md — Long-Term Memory (Workspace Scoped)
 
-*Last updated: 2026-03-05 IST*
+_Last updated: 2026-03-05 IST_
 
 ---
 

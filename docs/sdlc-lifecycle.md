@@ -5,24 +5,31 @@ Use this playbook to prevent planning-only drift and force execution.
 ## Lifecycle Stages
 
 1. Communication
+
 - Capture objective, constraints, deadline, judging criteria.
 
 2. Planning
+
 - Produce architecture and implementation plan with acceptance tests.
 
 3. Build
+
 - Implement real code and tests.
 
 4. Verify
+
 - Run test suite and quality gates.
 
 5. Secure
+
 - Enforce policy/security rules and document risks.
 
 6. Deploy
+
 - Validate deployment path and health proof.
 
 7. Package
+
 - Final README/checklist/demo script/submission links.
 
 ## Required Evidence per Stage

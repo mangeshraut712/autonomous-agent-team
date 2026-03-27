@@ -19,11 +19,13 @@ make deploy-docker
 ```
 
 Then open:
+
 - `http://127.0.0.1:${OPENCLAW_GATEWAY_PORT:-18789}/`
 
 ## 3) Contest Project Deploy Paths
 
 ### GitLab Contest Project
+
 Path: `projects/gitlab-ai-hackathon-2026/`
 
 ```bash
@@ -32,12 +34,15 @@ cd projects/gitlab-ai-hackathon-2026
 ```
 
 Proof endpoint after deployment:
+
 - `GET /healthz`
 
 ### Gemini Live Challenge Project
+
 Path: `/Users/mangeshraut/Downloads/Gemini Live Agent Challenge`
 
 Use project scripts and checklist there:
+
 - `./deploy.sh <PROJECT_ID>`
 - `DEVPOST_SUBMISSION_CHECKLIST.md`
 
@@ -50,4 +55,5 @@ make cleanup-root
 ```
 
 This archives `_trash/` and `always-on-memory-agent/` into:
+
 - `~/Downloads/AI-Agent-archive/<timestamp>/`

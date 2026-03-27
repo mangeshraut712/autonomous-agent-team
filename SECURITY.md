@@ -22,12 +22,12 @@ Read this before deploying.
 
 ## What Must Never Be Committed
 
-| File/Pattern | Why |
-|---|---|
-| `.env` | Contains live API keys and bot tokens |
+| File/Pattern                   | Why                                     |
+| ------------------------------ | --------------------------------------- |
+| `.env`                         | Contains live API keys and bot tokens   |
 | `openclaw.json` / `.openclaw/` | Contains gateway token, device identity |
-| `agents/*/memory/*.md` | May contain personal notes and drafts |
-| `intel/data/*.json` | May contain personal research data |
+| `agents/*/memory/*.md`         | May contain personal notes and drafts   |
+| `intel/data/*.json`            | May contain personal research data      |
 
 ## If You Accidentally Expose Secrets
 
@@ -47,6 +47,7 @@ Read this before deploying.
 When building or extending agents, strictly enforce these 3 pillars of security:
 
 ### 01 — SECRETS & CONFIG
+
 - [ ] Hardcoded secrets, tokens, or API keys in the codebase
 - [ ] Secrets leaking through logs, error messages, or API responses
 - [ ] Environment files committed to git
@@ -57,6 +58,7 @@ When building or extending agents, strictly enforce these 3 pillars of security:
 - [ ] Debug mode or dev tools enabled in production
 
 ### 02 — ACCESS & API
+
 - [ ] Pages or routes accessible without proper auth
 - [ ] Users accessing other users' data by changing an ID in the URL
 - [ ] Tokens stored insecurely on the client
@@ -68,6 +70,7 @@ When building or extending agents, strictly enforce these 3 pillars of security:
 - [ ] Admin routes protected only by hiding the URL
 
 ### 03 — USER INPUT
+
 - [ ] Unsanitized input reaching database queries
 - [ ] User-submitted text that can run code in other users' browsers
 - [ ] File uploads accepted without type or size checks
