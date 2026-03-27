@@ -1,0 +1,13 @@
+# CrewAI Multi-Agent Orchestrator — 2026 Production Dependencies
+#
+# Core framework
+crewai>=0.108,<1.0
+
+# LLM provider
+openai>=1.60,<2.0
+
+# Structured logging
+structlog>=24.1,<25.0
+
+# Utilities
+python-dotenv>=1.0,<2.0

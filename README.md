@@ -4,7 +4,28 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![OpenClaw](https://img.shields.io/badge/powered%20by-OpenClaw-blueviolet)](https://openclaw.ai)
+[![LangGraph](https://img.shields.io/badge/orchestration-LangGraph-orange)](langgraph/)
+[![CrewAI](https://img.shields.io/badge/orchestration-CrewAI-green)](crewai/)
+[![Python](https://img.shields.io/badge/python-3.11+-blue)](https://python.org)
 [![Model](https://img.shields.io/badge/default%20model-Configurable%20(via%20.env)-orange)](.env.example)
+
+---
+
+## 🚀 2026 Features
+
+This template includes production-grade multi-agent orchestration in **two frameworks**:
+
+| Feature | LangGraph | CrewAI |
+|---------|-----------|--------|
+| Parallel agent execution | ✅ StateGraph conditional edges | ✅ Hierarchical process |
+| Streaming output | ✅ `astream()` per-node | ✅ Event callbacks |
+| Human-in-the-loop | ✅ Native `interrupt()` | ✅ Guardrails/callbacks |
+| Error handling & retry | ✅ Exponential backoff | ✅ Built-in error recovery |
+| Structured logging | ✅ `structlog` | ✅ `structlog` |
+| State management | ✅ Custom `AgentState` dataclass | ✅ Context sharing |
+| CLI interface | ✅ `--stream` / `--hitl` flags | ✅ `--hierarchical` flag |
+
+**Why two frameworks?** Portfolio versatility. LangGraph shows you can build complex, custom orchestration graphs. CrewAI shows you can ship fast with higher-level abstractions. Employers in 2026 want to see both.
 
 ---
 
@@ -218,6 +239,16 @@ autonomous-agent-team/
 │   ├── task-decompose/    → Break complex tasks into phased execution
 │   └── sdlc-execution/    → Enforce communication→deployment delivery loop
 │
+├── 🕸️ langgraph/          → Standalone LangGraph multi-agent orchestrator
+│   ├── orchestrator.py    → StateGraph with 6 agent nodes + conditional routing + HITL
+│   ├── requirements.txt   → Pinned Python dependencies
+│   └── README.md          → Architecture & usage guide
+│
+├── 🚢 crewai/             → CrewAI alternative orchestrator (2026)
+│   ├── crew.py            → Crew-based implementation of the same 6-agent team
+│   ├── requirements.txt   → CrewAI dependencies
+│   └── README.md          → Architecture comparison (LangGraph vs CrewAI)
+│
 ├── 📚 docs/               → Operator guides
 │   ├── operations.md      → Day-to-day runbook
 │   ├── telegram-setup.md  → Telegram security configuration
@@ -253,6 +284,39 @@ autonomous-agent-team/
 ├── docker-compose.yml     → One-command deploy with Docker
 └── Makefile               → Convenience targets
 ```
+
+---
+
+## 🕸️ Multi-Agent Orchestration (LangGraph + CrewAI)
+
+This repo includes **two standalone orchestration implementations** of the same 6-agent team:
+
+### LangGraph (`langgraph/`)
+Graph-based orchestration with `StateGraph`, conditional routing, streaming, and human-in-the-loop interrupts. Best for complex custom flows.
+
+```bash
+pip install -r langgraph/requirements.txt
+python -m langgraph.orchestrator "Research agentic AI trends and draft a Twitter thread"
+python -m langgraph.orchestrator --stream --hitl "Write a blog post about our product"
+```
+
+### CrewAI (`crewai/`)
+Crew-based orchestration with role-defined agents and task delegation. Best for rapid prototyping and team-style workflows.
+
+```bash
+pip install -r crewai/requirements.txt
+python -m crewai.crew "Research agentic AI trends and draft a Twitter thread"
+python -m crewai.crew --hierarchical "Full product launch strategy"
+```
+
+| | LangGraph | CrewAI |
+|---|-----------|--------|
+| **Paradigm** | Graph (nodes + edges) | Crew (agents + tasks) |
+| **Parallelism** | Native fan-out | Sequential / hierarchical delegation |
+| **HITL** | `interrupt()` | Callbacks |
+| **Learning Curve** | Steeper | Gentler |
+
+See [langgraph/README.md](langgraph/README.md) and [crewai/README.md](crewai/README.md) for full architecture docs.
 
 ---
 

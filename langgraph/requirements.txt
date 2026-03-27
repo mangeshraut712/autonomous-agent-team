@@ -1,0 +1,12 @@
+# LangGraph Multi-Agent Orchestrator — 2026 Production Dependencies
+#
+# Core orchestration
+langgraph>=0.4,<0.5
+langchain-core>=0.3,<0.4
+langchain-openai>=0.3,<0.4
+
+# Structured logging
+structlog>=24.1,<25.0
+
+# Type hints backport (for Python 3.9 compat)
+typing-extensions>=4.12
