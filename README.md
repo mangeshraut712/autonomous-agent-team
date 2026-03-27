@@ -1,13 +1,44 @@
-# 🤖 Autonomous Agent Team — OpenClaw Workspace Template
+<div align="center">
 
-> A **production-ready, 6-agent AI workspace** built on [OpenClaw](https://github.com/openclaw/openclaw). Clone it, fill in your keys, and have an enterprise-quality autonomous agent team running on Telegram in under 15 minutes.
+# Autonomous Agent Team
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+### A production-ready 6-agent workspace built on OpenClaw.
+
 [![OpenClaw](https://img.shields.io/badge/powered%20by-OpenClaw-blueviolet)](https://openclaw.ai)
 [![LangGraph](https://img.shields.io/badge/orchestration-LangGraph-orange)](langgraph/)
 [![CrewAI](https://img.shields.io/badge/orchestration-CrewAI-green)](crewai/)
 [![Python](https://img.shields.io/badge/python-3.11+-blue)](https://python.org)
+[![MIT License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Model](<https://img.shields.io/badge/default%20model-Configurable%20(via%20.env)-orange>)](.env.example)
+
+**Clone it, fill in your keys, and have an autonomous agent team running on Telegram in under 15 minutes.**
+
+</div>
+
+---
+
+## Table of Contents
+
+- [Overview](#what-this-is)
+- [6-Agent Team](#the-6-agent-team)
+- [Quick Start](#quick-start)
+- [Deployment Paths](#deployment-paths)
+- [Dashboards](#dashboards)
+- [Memory System](#understanding-the-two-level-memory-system)
+- [Repository Structure](#repository-structure)
+- [Orchestration](#multi-agent-orchestration-langgraph--crewai)
+- [Architecture](#architecture-how-a-message-becomes-a-response)
+- [Configuration](#configuration-reference)
+- [Make Targets](#make-targets)
+- [Cron Automation](#cron-automation-agents-that-work-while-you-sleep)
+- [Security Best Practices](#security-best-practices)
+- [Troubleshooting](#troubleshooting)
+- [Documentation](#documentation)
+- [Contributing](#contributing)
+- [License](#license)
+- [Contact](#contact)
+
+---
 
 ---
 
@@ -488,6 +519,14 @@ See [CONTRIBUTING.md](CONTRIBUTING.md).
 ## 📄 License
 
 MIT — See [LICENSE](LICENSE)
+
+---
+
+## Contact
+
+- GitHub issues: https://github.com/mangeshraut712/autonomous-agent-team/issues
+- OpenClaw docs: https://openclaw.ai
+- Workspace guides: [docs/operations.md](docs/operations.md)
 
 ---
 
